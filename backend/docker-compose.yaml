@@ -1,4 +1,4 @@
-version: "3.7"
+version: '3.7'
 
 services:
   my-backend:
@@ -8,14 +8,14 @@ services:
     volumes:
       - ./src:/myfolder/src
     ports:
-      - "3000:3000"
+      - 3000:3000
+    env_file:
+      - ./.env.docker
 
   my-database:
     image: mysql:latest
-    enviornment:
-      MYSQL_DATABASE: "my_books_docker"
-      MYSQL_ROOT_PASSWORD: "root"
-      MYSQL_USER: "user"
-      MYSQL_PASSWORD: "password"
-    prorts:
+    environment:
+      MYSQL_DATABASE: 'my_books'
+      MYSQL_ROOT_PASSWORD: 'root'
+    ports:
       - 3306:3306
