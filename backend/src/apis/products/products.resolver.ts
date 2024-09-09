@@ -1,14 +1,18 @@
-import { Query, Resolver } from '@nestjs/graphql';
+import { Args, Mutation, Resolver } from '@nestjs/graphql';
 import { ProductsService } from './products.service';
+import { Product } from './entites/product.entity';
+import { CreateProductInput } from './dto/create-product.input';
 
 @Resolver()
 export class ProductsResolver {
   constructor(
-    private readonly usersService: ProductsService, //
+    private readonly productsService: ProductsService, //
   ) {}
 
-  @Query(() => String)
-  getHello(): string {
-    return this.usersService.getHello();
+  @Mutation(() => Product)
+  createProduct(
+    @Args('createProductInput') createProductInput: CreateProductInput,
+  ): Promise<Product> {
+    return this.productsService.create({ createProductInput });
   }
 }

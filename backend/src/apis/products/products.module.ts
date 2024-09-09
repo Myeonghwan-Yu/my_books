@@ -15,4 +15,4 @@ import { Product } from './entites/product.entity';
     ProductsService,
   ],
 })
-export class UsersModule {}
+export class ProductsModule {}
