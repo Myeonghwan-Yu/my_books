@@ -26,6 +26,9 @@ export class User {
   @Column() // DB에 저장, GQL에 노출하지 않음.
   password: string;
 
+  @Column({ default: false })
+  isSeller: boolean;
+
   @CreateDateColumn()
   @Field(() => Date)
   createdAt: Date;
