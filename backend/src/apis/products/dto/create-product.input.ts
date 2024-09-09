@@ -1,4 +1,4 @@
-import { Field, InputType, Int, Float } from '@nestjs/graphql';
+import { Field, InputType, Int } from '@nestjs/graphql';
 import {
   IsBoolean,
   IsString,
@@ -7,7 +7,6 @@ import {
   IsInt,
   ValidateIf,
 } from 'class-validator';
-import { Transform } from 'class-transformer';
 
 @InputType()
 export class CreateProductInput {
@@ -21,66 +20,43 @@ export class CreateProductInput {
   @IsNotEmpty()
   description: string;
 
-  @Field(() => String)
-  @IsString()
-  @IsNotEmpty()
-  serial: string;
-
-  @Field(() => Float)
+  @Field(() => Int)
   @IsInt()
   @IsNotEmpty()
   price: number;
-
-  @Field(() => String)
-  @IsString()
-  @IsNotEmpty()
-  category: string;
 
   @Field(() => Boolean)
   @IsBoolean()
   @IsNotEmpty()
   isBook: boolean;
 
-  // 책인 경우 필수로 지정, 그렇지 않으면 null로 처리
   @Field(() => String, { nullable: true })
-  @ValidateIf((o) => o.isBook === true)
+  @ValidateIf((o) => o.isBook)
   @IsString()
-  @IsNotEmpty()
-  @Transform(({ obj }) => (obj.isBook ? obj.author : null))
   author?: string;
 
   @Field(() => String, { nullable: true })
-  @ValidateIf((o) => o.isBook === true)
+  @ValidateIf((o) => o.isBook)
   @IsString()
-  @IsNotEmpty()
-  @Transform(({ obj }) => (obj.isBook ? obj.publisher : null))
   publisher?: string;
 
   @Field(() => Date, { nullable: true })
-  @ValidateIf((o) => o.isBook === true)
+  @ValidateIf((o) => o.isBook)
   @IsDate()
-  @IsNotEmpty()
-  @Transform(({ obj }) => (obj.isBook ? obj.publishedDate : null))
   publishedDate?: Date;
 
   @Field(() => String, { nullable: true })
-  @ValidateIf((o) => o.isBook === true)
+  @ValidateIf((o) => o.isBook)
   @IsString()
-  @IsNotEmpty()
-  @Transform(({ obj }) => (obj.isBook ? obj.isbn : null))
   isbn?: string;
 
   @Field(() => Int, { nullable: true })
-  @ValidateIf((o) => o.isBook === true)
+  @ValidateIf((o) => o.isBook)
   @IsInt()
-  @IsNotEmpty()
-  @Transform(({ obj }) => (obj.isBook ? obj.pages : null))
   pages?: number;
 
   @Field(() => String, { nullable: true })
-  @ValidateIf((o) => o.isBook === true)
+  @ValidateIf((o) => o.isBook)
   @IsString()
-  @IsNotEmpty()
-  @Transform(({ obj }) => (obj.isBook ? obj.genre : null))
   genre?: string;
 }

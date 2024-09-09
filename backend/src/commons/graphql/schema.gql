@@ -2,6 +2,52 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type BookProduct {
+  id: String!
+  product: Product!
+  author: String!
+  publisher: String!
+  publishedDate: DateTime!
+  isbn: String!
+  pages: Int!
+  genre: String!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type Product {
+  id: String!
+  name: String!
+  description: String!
+  price: Int!
+  stock: Int!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  isBook: Boolean!
+  bookProduct: BookProduct
+}
+
 type Query {
+  fetchProduct(productId: String!): Product!
   getHello: String!
+}
+
+type Mutation {
+  createProduct(createProductInput: CreateProductInput!): Product!
+}
+
+input CreateProductInput {
+  name: String!
+  description: String!
+  price: Int!
+  isBook: Boolean!
+  author: String
+  publisher: String
+  publishedDate: DateTime
+  isbn: String
+  pages: Int
+  genre: String
 }
