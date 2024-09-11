@@ -32,6 +32,7 @@ type Product {
 
 type Query {
   fetchProduct(productId: String!): Product!
+  fetchProducts: [Product!]!
   getHello: String!
 }
 

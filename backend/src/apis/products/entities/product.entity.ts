@@ -9,6 +9,7 @@ import {
 } from 'typeorm';
 import { ObjectType, Field, Int } from '@nestjs/graphql';
 import { BookProduct } from 'src/apis/bookproducts/entities/bookProduct.entity';
+import { Min } from 'class-validator';
 
 @ObjectType() // GraphQL 타입으로 정의
 @Entity()
@@ -25,10 +26,12 @@ export class Product {
   @Column()
   description: string;
 
+  @Min(0)
   @Field(() => Int)
   @Column()
   price: number;
 
+  @Min(0)
   @Field(() => Int)
   @Column({ default: 0 })
   stock: number;
