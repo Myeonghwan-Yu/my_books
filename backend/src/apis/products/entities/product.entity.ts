@@ -8,8 +8,8 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { ObjectType, Field, Int } from '@nestjs/graphql';
-import { BookProduct } from 'src/apis/bookproducts/entities/bookProduct.entity';
 import { Min } from 'class-validator';
+import { BookProduct } from './bookproduct.entity';
 
 @ObjectType() // GraphQL 타입으로 정의
 @Entity()

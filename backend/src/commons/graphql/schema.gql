@@ -4,13 +4,13 @@
 
 type BookProduct {
   id: String!
-  product: Product!
   author: String!
   publisher: String!
   publishedDate: DateTime!
   isbn: String!
   pages: Int!
   genre: String!
+  product: Product!
 }
 
 """

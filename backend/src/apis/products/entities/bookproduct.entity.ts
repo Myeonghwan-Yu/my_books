@@ -1,12 +1,12 @@
-import { ObjectType, Field, Int } from '@nestjs/graphql';
-import { Product } from 'src/apis/products/entities/product.entity';
 import {
+  Column,
   Entity,
   PrimaryGeneratedColumn,
-  Column,
   OneToOne,
   JoinColumn,
 } from 'typeorm';
+import { ObjectType, Field, Int } from '@nestjs/graphql';
+import { Product } from './product.entity';
 
 @ObjectType() // GraphQL 타입으로 정의
 @Entity()
@@ -14,11 +14,6 @@ export class BookProduct {
   @Field(() => String)
   @PrimaryGeneratedColumn('uuid')
   id: string;
-
-  @Field(() => Product) // Product 엔티티와의 관계 정의
-  @OneToOne(() => Product, (product) => product.bookProduct)
-  @JoinColumn()
-  product: Product;
 
   @Field(() => String)
   @Column()
@@ -43,4 +38,9 @@ export class BookProduct {
   @Field(() => String)
   @Column()
   genre: string;
+
+  @Field(() => Product) // 관계 설정
+  @OneToOne(() => Product, (product) => product.bookProduct)
+  @JoinColumn()
+  product: Product;
 }
