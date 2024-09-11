@@ -38,6 +38,7 @@ type Query {
 
 type Mutation {
   createProduct(createProductInput: CreateProductInput!): Product!
+  updateProduct(productId: String!, updateProductInput: UpdateProductInput!): Product!
 }
 
 input CreateProductInput {
@@ -45,10 +46,23 @@ input CreateProductInput {
   description: String!
   price: Int!
   isBook: Boolean!
-  author: String
-  publisher: String
-  publishedDate: DateTime
-  isbn: String
-  pages: Int
-  genre: String
+  bookProduct: BookProductInput
+}
+
+input BookProductInput {
+  author: String!
+  publisher: String!
+  publishedDate: DateTime!
+  isbn: String!
+  pages: Int!
+  genre: String!
+}
+
+input UpdateProductInput {
+  name: String
+  description: String
+  price: Int
+  isBook: Boolean
+  bookProduct: BookProductInput
+  stock: Int
 }

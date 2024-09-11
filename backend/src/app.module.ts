@@ -4,10 +4,7 @@ import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
-import { User } from './apis/users/entities/user.entity';
 import { ProductsModule } from './apis/products/products.module';
-import { Product } from './apis/products/entities/product.entity';
-import { BookProduct } from './apis/bookproducts/entities/bookProduct.entity';
 
 @Module({
   imports: [
@@ -25,7 +22,7 @@ import { BookProduct } from './apis/bookproducts/entities/bookProduct.entity';
       username: process.env.DATABASE_USERNAME,
       password: process.env.DATABASE_PASSWORD,
       database: process.env.DATABASE_DATABASE,
-      entities: [User, Product, BookProduct],
+      entities: [__dirname + '/**/*.entity{.ts,.js}'],
       synchronize: true,
       logging: true,
     }),

@@ -29,10 +29,16 @@ export class ProductsResolver {
     return this.productsService.create({ createProductInput });
   }
 
-  updateProduct(
+  @Mutation(() => Product)
+  async updateProduct(
     @Args('productId') productId: string,
     @Args('updateProductInput') updateProductInput: UpdateProductInput,
   ): Promise<Product> {
     return this.productsService.update({ productId, updateProductInput });
+  }
+
+  @Mutation(() => Product)
+  async deleteProduct(@Args('productId') productId: string): Promise<boolean> {
+    return this.productsService.delete({ productId });
   }
 }

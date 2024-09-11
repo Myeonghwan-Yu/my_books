@@ -1,13 +1,10 @@
-import {
-  Injectable,
-  Scope,
-  UnprocessableEntityException,
-} from '@nestjs/common';
+import { Injectable, Scope } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Product } from './entities/product.entity';
 import { Repository } from 'typeorm';
 import {
   IProductsCreateServiceCreate,
+  IProductsServiceDelete,
   IProductsServiceFindOne,
   IProductsServiceUpdate,
 } from './interfaces/products-service.interface';
@@ -50,13 +47,8 @@ export class ProductsService {
     return result;
   }
 
-  checkSoldOut({ product }: IProdcutServiceCheckSoldOut) {
-    if (product.stock === 0) {
-      throw new UnprocessableEntityException();
-    }
+  async delete({ productId }: IProductsServiceDelete): Promise<boolean> {
+    const result = this.productsRepository.delete({ id: productId });
+    return (await result).affected ? true : false;
   }
-}
-
-interface IProdcutServiceCheckSoldOut {
-  product: Product;
 }
