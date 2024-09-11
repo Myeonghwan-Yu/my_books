@@ -48,7 +48,7 @@ export class ProductsService {
   }
 
   async delete({ productId }: IProductsServiceDelete): Promise<boolean> {
-    const result = this.productsRepository.delete({ id: productId });
-    return (await result).affected ? true : false;
+    const result = await this.productsRepository.delete({ id: productId });
+    return result.affected ? true : false;
   }
 }
