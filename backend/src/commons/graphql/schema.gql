@@ -41,6 +41,8 @@ type Product {
 type Query {
   fetchProduct(productId: String!): Product!
   fetchProducts: [Product!]!
+  fetchReview(reviewId: String!): Review!
+  fetchReviews(productId: String!): [Review!]!
   getHello: String!
 }
 
@@ -49,6 +51,8 @@ type Mutation {
   updateProduct(productId: String!, updateProductInput: UpdateProductInput!): Product!
   deleteProduct(productId: String!): Boolean!
   createReview(productId: String!, createReviewInput: CreateReviewInput!): Review!
+  deleteReview(reviewId: String!): Boolean!
+  updateReview(reviewId: String!, updateReviewInput: UpdateReviewInput!): Review!
 }
 
 input CreateProductInput {
@@ -81,4 +85,10 @@ input CreateReviewInput {
   title: String!
   content: String!
   rating: Int!
+}
+
+input UpdateReviewInput {
+  title: String
+  content: String
+  rating: Int
 }

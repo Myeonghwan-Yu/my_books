@@ -1,9 +1,12 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Review } from './entities/review.entity';
 import { ProductsService } from '../products/products.service';
-import { IReviewsServiceCreate } from './interfaces/reviews-service.interface';
+import {
+  IReviewsServiceCreate,
+  IReviewsServiceUpdate,
+} from './interfaces/reviews-service.interface';
 
 @Injectable()
 export class ReviewsService {
@@ -28,5 +31,51 @@ export class ReviewsService {
     });
 
     return this.reviewsRepository.save(review);
+  }
+
+  async findOne({ reviewId }: { reviewId: string }): Promise<Review> {
+    const review = await this.reviewsRepository.findOne({
+      where: { id: reviewId },
+    });
+
+    if (!review) {
+      throw new NotFoundException('해당 리뷰를 찾을 수 없습니다.');
+    }
+
+    return review;
+  }
+
+  async findAll({ productId }: { productId: string }): Promise<Review[]> {
+    return await this.reviewsRepository.find({
+      where: { product: { id: productId } },
+    });
+  }
+
+  async delete(reviewId: string): Promise<boolean> {
+    const review = await this.findOne({ reviewId });
+
+    if (!review) {
+      throw new NotFoundException('리뷰를 찾을 수 없습니다.');
+    }
+    await this.reviewsRepository.delete({ id: reviewId });
+    return true;
+  }
+
+  async update({
+    reviewId,
+    updateReviewInput,
+  }: IReviewsServiceUpdate): Promise<Review> {
+    const review = await this.findOne({ reviewId });
+
+    if (!review) {
+      throw new NotFoundException('리뷰를 찾을 수 없습니다.');
+    }
+
+    const result = await this.reviewsRepository.save({
+      ...review,
+      ...updateReviewInput,
+    });
+
+    return result;
   }
 }
