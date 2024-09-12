@@ -16,6 +16,6 @@ export class BookProductsService {
 
   async delete({ id }: { id: string }): Promise<boolean> {
     const result = await this.bookProductsRepository.delete({ id });
-    return result.affected ? true : false;
+    return result.affected && result.affected > 0;
   }
 }

@@ -18,5 +18,6 @@ import { BookProductsService } from '../bookproducts/bookProducts.service';
     ProductsService,
     BookProductsService,
   ],
+  exports: [ProductsService],
 })
 export class ProductsModule {}

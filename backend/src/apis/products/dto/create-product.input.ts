@@ -7,6 +7,7 @@ import {
   IsString,
   ValidateIf,
 } from 'class-validator';
+
 @InputType()
 export class BookProductInput {
   @Field(() => String)
@@ -64,6 +65,5 @@ export class CreateProductInput {
 
   @Field(() => BookProductInput, { nullable: true })
   @ValidateIf((o) => o.isBook === true)
-  @IsNotEmpty()
   bookProduct?: BookProductInput;
 }

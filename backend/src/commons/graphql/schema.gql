@@ -17,6 +17,14 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
+type Review {
+  id: String!
+  title: String!
+  content: String!
+  rating: Int!
+  product: Product!
+}
+
 type Product {
   id: String!
   name: String!
@@ -27,6 +35,7 @@ type Product {
   updatedAt: DateTime!
   isBook: Boolean!
   bookProduct: BookProduct
+  reviews: [Review!]
 }
 
 type Query {
@@ -39,6 +48,7 @@ type Mutation {
   createProduct(createProductInput: CreateProductInput!): Product!
   updateProduct(productId: String!, updateProductInput: UpdateProductInput!): Product!
   deleteProduct(productId: String!): Boolean!
+  createReview(productId: String!, createReviewInput: CreateReviewInput!): Review!
 }
 
 input CreateProductInput {
@@ -65,4 +75,10 @@ input UpdateProductInput {
   isBook: Boolean
   bookProduct: BookProductInput
   stock: Int
+}
+
+input CreateReviewInput {
+  title: String!
+  content: String!
+  rating: Int!
 }

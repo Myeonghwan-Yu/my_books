@@ -3,6 +3,7 @@ import {
   CreateDateColumn,
   Entity,
   JoinColumn,
+  OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
@@ -10,6 +11,7 @@ import {
 import { ObjectType, Field, Int } from '@nestjs/graphql';
 import { Min } from 'class-validator';
 import { BookProduct } from 'src/apis/bookproducts/entitites/bookproduct.entity';
+import { Review } from 'src/apis/reivews/entities/review.entity';
 
 @ObjectType() // GraphQL 타입으로 정의
 @Entity()
@@ -56,4 +58,8 @@ export class Product {
   })
   @JoinColumn()
   bookProduct?: BookProduct;
+
+  @Field(() => [Review], { nullable: true })
+  @OneToMany(() => Review, (review) => review.product)
+  reviews?: Review[];
 }

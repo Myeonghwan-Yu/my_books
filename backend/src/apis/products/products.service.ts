@@ -64,26 +64,19 @@ export class ProductsService {
   }
 
   async delete({ productId }: IProductsServiceDelete): Promise<boolean> {
-    const product = await this.productsRepository.findOne({
-      where: { id: productId },
-      relations: ['bookProduct'],
-    });
+    const product = await this.findOne({ productId });
 
     if (product) {
       if (product.bookProduct) {
         const result = await this.bookProductService.delete({
-          id: product.bookProduct?.id,
+          id: product.bookProduct.id,
         });
-
-        console.log('BookProduct delete result:', result);
 
         if (!result) {
           return false;
         }
       }
-
       const result2 = await this.productsRepository.delete({ id: productId });
-      console.log('Product delete result:', result2); // 로그 추가
       return result2.affected ? true : false;
     }
 
