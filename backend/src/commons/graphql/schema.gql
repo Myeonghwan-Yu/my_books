@@ -10,7 +10,6 @@ type BookProduct {
   isbn: String!
   pages: Int!
   genre: String!
-  product: Product!
 }
 
 """

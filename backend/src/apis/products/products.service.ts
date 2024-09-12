@@ -8,29 +8,45 @@ import {
   IProductsServiceFindOne,
   IProductsServiceUpdate,
 } from './interfaces/products-service.interface';
+import { BookProductsService } from '../bookproducts/bookProducts.service';
 
 @Injectable({ scope: Scope.DEFAULT })
 export class ProductsService {
   constructor(
     @InjectRepository(Product)
     private readonly productsRepository: Repository<Product>,
+
+    private readonly bookProductService: BookProductsService,
   ) {}
 
   async findAll(): Promise<Product[]> {
-    return this.productsRepository.find();
+    return this.productsRepository.find({
+      relations: ['bookProduct'],
+    });
   }
 
   async findOne({ productId }: IProductsServiceFindOne): Promise<Product> {
-    return this.productsRepository.findOne({ where: { id: productId } });
+    return this.productsRepository.findOne({
+      where: { id: productId },
+      relations: ['bookProduct'],
+    });
   }
 
   async create({
     createProductInput,
   }: IProductsCreateServiceCreate): Promise<Product> {
-    const result = await this.productsRepository.save({
-      ...createProductInput,
+    const { bookProduct, ...product } = createProductInput;
+
+    const result = await this.bookProductService.create({
+      ...bookProduct,
     });
-    return result;
+
+    const result2 = await this.productsRepository.save({
+      ...product,
+      bookProduct: result,
+    });
+
+    return result2;
   }
 
   async update({
@@ -48,7 +64,29 @@ export class ProductsService {
   }
 
   async delete({ productId }: IProductsServiceDelete): Promise<boolean> {
-    const result = await this.productsRepository.delete({ id: productId });
-    return result.affected ? true : false;
+    const product = await this.productsRepository.findOne({
+      where: { id: productId },
+      relations: ['bookProduct'],
+    });
+
+    if (product) {
+      if (product.bookProduct) {
+        const result = await this.bookProductService.delete({
+          id: product.bookProduct?.id,
+        });
+
+        console.log('BookProduct delete result:', result);
+
+        if (!result) {
+          return false;
+        }
+      }
+
+      const result2 = await this.productsRepository.delete({ id: productId });
+      console.log('Product delete result:', result2); // 로그 추가
+      return result2.affected ? true : false;
+    }
+
+    return false;
   }
 }
