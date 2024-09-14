@@ -8,7 +8,7 @@ import {
   IProductsServiceFindOne,
   IProductsServiceUpdate,
 } from './interfaces/products-service.interface';
-import { BookProductsService } from '../bookproducts/bookProducts.service';
+import { BookProductsService } from '../bookProducts/bookProducts.service';
 
 @Injectable({ scope: Scope.DEFAULT })
 export class ProductsService {

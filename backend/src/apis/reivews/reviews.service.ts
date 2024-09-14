@@ -4,6 +4,9 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Review } from './entities/review.entity';
 import { ProductsService } from '../products/products.service';
 import {
+  IReivewServiceFindOne,
+  IReviewServiceDelete,
+  IReviewServiceFindAll,
   IReviewsServiceCreate,
   IReviewsServiceUpdate,
 } from './interfaces/reviews-service.interface';
@@ -33,7 +36,7 @@ export class ReviewsService {
     return this.reviewsRepository.save(review);
   }
 
-  async findOne({ reviewId }: { reviewId: string }): Promise<Review> {
+  async findOne({ reviewId }: IReivewServiceFindOne): Promise<Review> {
     const review = await this.reviewsRepository.findOne({
       where: { id: reviewId },
     });
@@ -45,13 +48,13 @@ export class ReviewsService {
     return review;
   }
 
-  async findAll({ productId }: { productId: string }): Promise<Review[]> {
+  async findAll({ productId }: IReviewServiceFindAll): Promise<Review[]> {
     return await this.reviewsRepository.find({
       where: { product: { id: productId } },
     });
   }
 
-  async delete(reviewId: string): Promise<boolean> {
+  async delete({ reviewId }: IReviewServiceDelete): Promise<boolean> {
     const review = await this.findOne({ reviewId });
 
     if (!review) {

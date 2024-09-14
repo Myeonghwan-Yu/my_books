@@ -23,7 +23,7 @@ export class ReviewsResolver {
 
   @Mutation(() => Boolean)
   async deleteReview(@Args('reviewId') reviewId: string): Promise<boolean> {
-    return this.reviewsService.delete(reviewId);
+    return this.reviewsService.delete({ reviewId });
   }
 
   @Mutation(() => Review)

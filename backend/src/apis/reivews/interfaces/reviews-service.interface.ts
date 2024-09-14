@@ -10,3 +10,15 @@ export class IReviewsServiceUpdate {
   reviewId: string;
   updateReviewInput: UpdateReviewInput;
 }
+
+export class IReviewServiceDelete {
+  reviewId: string;
+}
+
+export class IReivewServiceFindOne {
+  reviewId: string;
+}
+
+export class IReviewServiceFindAll {
+  productId: string;
+}

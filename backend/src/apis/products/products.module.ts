@@ -3,8 +3,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ProductsService } from './products.service';
 import { ProductsResolver } from './products.resolver';
 import { Product } from './entities/product.entity';
-import { BookProduct } from '../bookproducts/entitites/bookproduct.entity';
-import { BookProductsService } from '../bookproducts/bookProducts.service';
+import { BookProduct } from '../bookProducts/entitites/bookproduct.entity';
+import { BookProductsService } from '../bookProducts/bookProducts.service';
 
 @Module({
   imports: [
