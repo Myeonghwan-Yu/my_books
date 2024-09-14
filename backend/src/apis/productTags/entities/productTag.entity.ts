@@ -13,8 +13,7 @@ export class ProductTag {
   @Field(() => String)
   name: string;
 
-  // N대M 관계 설정 (역방향)
   @ManyToMany(() => Product, (product) => product.productTags)
-  @Field(() => [Product]) // GraphQL에서 제품들을 조회할 수 있게 함
+  @Field(() => [Product])
   products: Product[];
 }

@@ -2,8 +2,8 @@ import { Module } from '@nestjs/common';
 import { ProductsModule } from '../products/products.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ProductTag } from './entities/productTag.entity';
-import { ProductsTagsResolver } from './productsTags.resolver';
-import { ProductsTagsService } from './productsTags.service';
+import { ProductTagsResolver } from './productTags.resolver';
+import { ProductTagsService } from './productTags.service';
 
 @Module({
   imports: [
@@ -13,8 +13,8 @@ import { ProductsTagsService } from './productsTags.service';
     ]),
   ],
   providers: [
-    ProductsTagsResolver, //
-    ProductsTagsService,
+    ProductTagsResolver, //
+    ProductTagsService,
   ],
 })
-export class ReviewsModule {}
+export class ProductTagsModule {}

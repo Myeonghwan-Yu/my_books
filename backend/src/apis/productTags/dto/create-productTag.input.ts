@@ -7,3 +7,10 @@ export class CreateProductTagInput {
   @IsNotEmpty()
   name: string;
 }
+
+@InputType()
+export class UpdateProductTagInput {
+  @Field(() => String)
+  @IsNotEmpty()
+  name: string;
+}

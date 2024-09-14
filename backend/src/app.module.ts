@@ -6,11 +6,13 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
 import { ProductsModule } from './apis/products/products.module';
 import { ReviewsModule } from './apis/reivews/reviews.module';
+import { ProductTagsModule } from './apis/productTags/productTags.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot(),
     ProductsModule,
+    ProductTagsModule,
     ReviewsModule,
     UsersModule, //
     GraphQLModule.forRoot<ApolloDriverConfig>({

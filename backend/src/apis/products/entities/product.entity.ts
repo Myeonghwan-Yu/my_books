@@ -14,7 +14,7 @@ import { ObjectType, Field, Int } from '@nestjs/graphql';
 import { Min } from 'class-validator';
 import { BookProduct } from 'src/apis/bookProducts/entitites/bookproduct.entity';
 import { Review } from 'src/apis/reivews/entities/review.entity';
-import { ProductTag } from 'src/apis/productsTags/entities/productTag.entity';
+import { ProductTag } from 'src/apis/productTags/entities/productTag.entity';
 
 @ObjectType() // GraphQL 타입으로 정의
 @Entity()
