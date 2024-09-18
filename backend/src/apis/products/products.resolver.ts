@@ -41,4 +41,12 @@ export class ProductsResolver {
   async deleteProduct(@Args('productId') productId: string): Promise<boolean> {
     return this.productsService.delete({ productId });
   }
+
+  @Mutation(() => Product)
+  async addProductTag(
+    @Args('productId') productId: string,
+    @Args('productTagId') productTagId: string,
+  ): Promise<Product> {
+    return this.productsService.addProductTag({ productId, productTagId });
+  }
 }

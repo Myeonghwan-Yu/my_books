@@ -1,22 +1,29 @@
-import { Injectable, Scope } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+  Scope,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Product } from './entities/product.entity';
 import { Repository } from 'typeorm';
 import {
-  IProductsCreateServiceCreate,
+  IProductServiceAddProductTag,
+  IProductsServiceCreate,
   IProductsServiceDelete,
   IProductsServiceFindOne,
   IProductsServiceUpdate,
 } from './interfaces/products-service.interface';
 import { BookProductsService } from '../bookProducts/bookProducts.service';
+import { ProductTagsService } from '../productTags/productTags.service';
 
 @Injectable({ scope: Scope.DEFAULT })
 export class ProductsService {
   constructor(
     @InjectRepository(Product)
     private readonly productsRepository: Repository<Product>,
-
     private readonly bookProductService: BookProductsService,
+    private readonly productTagsService: ProductTagsService,
   ) {}
 
   async findAll(): Promise<Product[]> {
@@ -34,7 +41,7 @@ export class ProductsService {
 
   async create({
     createProductInput,
-  }: IProductsCreateServiceCreate): Promise<Product> {
+  }: IProductsServiceCreate): Promise<Product> {
     const { bookProduct, ...product } = createProductInput;
 
     const result = await this.bookProductService.create({
@@ -81,5 +88,29 @@ export class ProductsService {
     }
 
     return false;
+  }
+
+  async addProductTag({
+    productId,
+    productTagId,
+  }: IProductServiceAddProductTag): Promise<Product> {
+    const product = await this.productsRepository.findOne({
+      where: { id: productId },
+      relations: ['productTags'],
+    });
+
+    const productTag = await this.productTagsService.findOne({ productTagId });
+
+    if (!product || !productTag) {
+      throw new NotFoundException('상품이나 태그가 존재하지 않습니다');
+    }
+
+    if (product.productTags.some((tag) => tag.id === productTagId)) {
+      throw new ConflictException('이미 추가된 태그입니다');
+    }
+
+    product.productTags.push(productTag);
+
+    return this.productsRepository.save(product);
   }
 }
