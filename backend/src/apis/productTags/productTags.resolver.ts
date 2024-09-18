@@ -5,6 +5,7 @@ import {
   CreateProductTagInput,
   UpdateProductTagInput,
 } from './dto/create-productTag.input';
+import { Product } from '../products/entities/product.entity';
 
 @Resolver()
 export class ProductTagsResolver {
@@ -47,5 +48,12 @@ export class ProductTagsResolver {
     @Args('productTagId') productTagId: string,
   ): Promise<boolean> {
     return this.productTagsService.delete({ productTagId });
+  }
+
+  @Query(() => [Product])
+  async fetchProductsByTag(
+    @Args('productTagId') productTagId: string,
+  ): Promise<Product[]> {
+    return this.productTagsService.findProductsByTag(productTagId);
   }
 }

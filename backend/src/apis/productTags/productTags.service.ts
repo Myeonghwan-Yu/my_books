@@ -8,6 +8,7 @@ import {
   IProductTagsServiceFinone,
   IProductTagsServiceUpdate,
 } from './interfaces/productTags-service.interface';
+import { Product } from '../products/entities/product.entity';
 
 @Injectable()
 export class ProductTagsService {
@@ -62,5 +63,18 @@ export class ProductTagsService {
 
     await this.productTagsRepository.delete({ id: productTagId });
     return true;
+  }
+
+  async findProductsByTag(tagId: string): Promise<Product[]> {
+    const productTag = await this.productTagsRepository.findOne({
+      where: { id: tagId },
+      relations: ['products'],
+    });
+
+    if (!productTag) {
+      throw new NotFoundException('태그를 찾을 수 없습니다');
+    }
+
+    return productTag.products;
   }
 }
