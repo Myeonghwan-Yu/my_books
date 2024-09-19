@@ -7,10 +7,12 @@ import { ConfigModule } from '@nestjs/config';
 import { ProductsModule } from './apis/products/products.module';
 import { ReviewsModule } from './apis/reivews/reviews.module';
 import { ProductTagsModule } from './apis/productTags/productTags.module';
+import { AuthModule } from './apis/auth/auth.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot(),
+    AuthModule,
     ProductsModule,
     ProductTagsModule,
     ReviewsModule,
