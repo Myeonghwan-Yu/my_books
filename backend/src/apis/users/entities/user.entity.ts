@@ -1,5 +1,5 @@
 // src/apis/users/entities/user.entity.ts
-import { Field, ObjectType } from '@nestjs/graphql';
+import { Field, Int, ObjectType } from '@nestjs/graphql';
 import {
   Column,
   CreateDateColumn,
@@ -25,6 +25,10 @@ export class User {
 
   @Column() // DB에 저장, GQL에 노출하지 않음.
   password: string;
+
+  @Column()
+  @Field(() => Int)
+  age: number;
 
   @Column({ default: false })
   isSeller: boolean;
