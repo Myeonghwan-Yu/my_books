@@ -64,6 +64,8 @@ type Query {
 }
 
 type Mutation {
+  login(email: String!, password: String!): String!
+  createUser(email: String!, password: String!, name: String!, age: Int!): User!
   createProduct(createProductInput: CreateProductInput!): Product!
   updateProduct(productId: String!, updateProductInput: UpdateProductInput!): Product!
   deleteProduct(productId: String!): Boolean!
@@ -74,7 +76,6 @@ type Mutation {
   createReview(productId: String!, createReviewInput: CreateReviewInput!): Review!
   deleteReview(reviewId: String!): Boolean!
   updateReview(reviewId: String!, updateReviewInput: UpdateReviewInput!): Review!
-  createUser(email: String!, password: String!, name: String!, age: Int!): User!
 }
 
 input CreateProductInput {

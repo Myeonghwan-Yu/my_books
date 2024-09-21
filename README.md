@@ -3,6 +3,7 @@
 프리티어 setting.json으로 사용
 
 설치한\패키지들: graphql, apollo-server @nestjs/config nestjs/typeorm typeorm mysql2 class-validator class-transformers
+jwt passport-jwt passport
 
 체크할 내용들 :
 중복검사 할 때 이름으로 조건을 걸면 안 됨.중복되는 상품 이름이 많아서 불가능함.
@@ -21,3 +22,5 @@ product 삭제부분 이상함.. 항상 false 나오는데 원인 파악해봐�
 조건 잘챙기기
 
 해시도 서비스에서 분리해서 사용하기
+
+배포할 때 에러코드는 알수없게 서버 에러로 퉁쳐버리기
