@@ -4,6 +4,8 @@ import * as bcrypt from 'bcrypt';
 import {
   IAuthServiceGetAccessToken,
   IAuthServiceLogin,
+  IAuthServiceRestoreAccessToken,
+  IAuthServiceSetRefreshToken,
 } from './interfaces/auth-service.interface';
 import { JwtService } from '@nestjs/jwt';
 
@@ -14,7 +16,11 @@ export class AuthService {
     private readonly usersService: UsersService, //
   ) {}
 
-  async login({ email, password }: IAuthServiceLogin): Promise<string> {
+  async login({
+    email,
+    password,
+    context,
+  }: IAuthServiceLogin): Promise<string> {
     const user = await this.usersService.findOneByEmail({ email });
 
     if (!user) {
@@ -26,7 +32,25 @@ export class AuthService {
       throw new UnprocessableEntityException('암호가 잘못되었습니다.');
     }
 
+    this.setRefreshToken({ user, context });
+
     return this.getAccessToken({ user });
+  }
+
+  restoreAccessToken({ user }: IAuthServiceRestoreAccessToken): string {
+    return this.getAccessToken({ user });
+  }
+
+  setRefreshToken({ user, context }: IAuthServiceSetRefreshToken): void {
+    const refreshToken = this.jwtService.sign(
+      { sub: user.id },
+      { secret: '나의리프레시비밀번호', expiresIn: '2w' },
+    );
+
+    context.res.setHeader(
+      'set-Cookie', //
+      `refreshToken=${refreshToken}; path=/;`,
+    );
   }
 
   getAccessToken({ user }: IAuthServiceGetAccessToken): string {

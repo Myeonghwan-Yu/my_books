@@ -2,7 +2,8 @@ import { Args, Context, Int, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { UsersService } from './users.service';
 import { User } from './entities/user.entity';
 import { UseGuards } from '@nestjs/common';
-import { GqlAuthAccessGuard } from '../auth/guards/gql-auth.guard';
+import { IContext } from 'src/commons/interfaces/context';
+import { GqlAuthGuard } from '../auth/guards/gql-auth.guard';
 
 @Resolver()
 export class UsersResolver {
@@ -10,7 +11,7 @@ export class UsersResolver {
     private readonly usersService: UsersService, //
   ) {}
 
-  @UseGuards(GqlAuthAccessGuard)
+  @UseGuards(GqlAuthGuard('access'))
   @Query(() => String)
   fetchUser(
     @Context() context: IContext, //
