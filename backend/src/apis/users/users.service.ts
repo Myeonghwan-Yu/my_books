@@ -5,6 +5,7 @@ import { Repository } from 'typeorm';
 import {
   IUsersServiceCreate,
   IUsersServiceFindOneByEmail,
+  IUsersServiceFindOneById,
 } from './interfaces/users-service.interface';
 import * as bcrypt from 'bcrypt';
 
@@ -19,6 +20,9 @@ export class UsersService {
     return this.usersRepository.findOne({ where: { email } });
   }
 
+  async findOneById({ userId }: IUsersServiceFindOneById): Promise<User> {
+    return this.usersRepository.findOne({ where: { id: Number(userId) } });
+  }
   async create({
     email,
     password,

@@ -1,7 +1,7 @@
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 import { ObjectType, Field, Int } from '@nestjs/graphql';
 
-@ObjectType() // GraphQL 타입으로 정의
+@ObjectType()
 @Entity()
 export class BookProduct {
   @Field(() => String)

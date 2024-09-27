@@ -11,6 +11,7 @@ export class UsersResolver {
     private readonly usersService: UsersService, //
   ) {}
 
+  // 미완성
   @UseGuards(GqlAuthGuard('access'))
   @Query(() => String)
   fetchUser(
