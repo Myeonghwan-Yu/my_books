@@ -5,12 +5,14 @@ import { Repository } from 'typeorm';
 import { UsersService } from '../users/users.service';
 import { ICartsServiceAddToCart } from './interfaces/carts-service.interface';
 import { CartItemsService } from '../cartItems/cartitems.service';
+import { ProductsService } from '../products/products.service';
 
 Injectable({ scope: Scope.DEFAULT });
 export class CartsService {
   constructor(
     @InjectRepository(Cart)
     private readonly cartRepository: Repository<Cart>,
+    private readonly productsService: ProductsService,
     private readonly cartItemsService: CartItemsService,
     private readonly usersService: UsersService,
   ) {}
@@ -26,6 +28,13 @@ export class CartsService {
     if (!cart) {
       cart = this.cartRepository.create({ user, items: [] });
       await this.cartRepository.save({ ...cart });
+    }
+
+    const product = await this.productsService.findOne({
+      productId: addToCartInput.productId,
+    });
+    if (!product) {
+      throw new Error('상품이 존재하지 않습니다.');
     }
 
     await this.cartItemsService.addCartItem({

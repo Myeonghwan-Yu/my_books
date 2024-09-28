@@ -65,5 +65,5 @@ export class CreateProductInput {
 
   @Field(() => BookProductInput, { nullable: true })
   @ValidateIf((o) => o.isBook === true)
-  bookProduct?: BookProductInput;
+  bookProductInput?: BookProductInput;
 }

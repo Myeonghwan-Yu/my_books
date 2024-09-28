@@ -2,6 +2,10 @@ import { Injectable } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { BookProduct } from './entitites/bookproduct.entity';
+import {
+  IBookProductServiceCreate,
+  IBookProductServiceDelete,
+} from './interfaces/bookProducts-service.interface';
 
 @Injectable()
 export class BookProductsService {
@@ -10,11 +14,13 @@ export class BookProductsService {
     private readonly bookProductsRepository: Repository<BookProduct>,
   ) {}
 
-  async create(bookProduct: Partial<BookProduct>): Promise<BookProduct> {
-    return await this.bookProductsRepository.save(bookProduct);
+  async create({
+    bookProductInput,
+  }: IBookProductServiceCreate): Promise<BookProduct> {
+    return await this.bookProductsRepository.save({ ...bookProductInput });
   }
 
-  async delete({ id }: { id: string }): Promise<boolean> {
+  async delete({ id }: IBookProductServiceDelete): Promise<boolean> {
     const result = await this.bookProductsRepository.delete({ id });
     return result.affected && result.affected > 0;
   }

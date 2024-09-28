@@ -22,7 +22,7 @@ export class ProductsService {
   constructor(
     @InjectRepository(Product)
     private readonly productsRepository: Repository<Product>,
-    private readonly bookProductService: BookProductsService,
+    private readonly bookProductsService: BookProductsService,
     private readonly productTagsService: ProductTagsService,
   ) {}
 
@@ -42,18 +42,22 @@ export class ProductsService {
   async create({
     createProductInput,
   }: IProductsServiceCreate): Promise<Product> {
-    const { bookProduct, ...product } = createProductInput;
+    const { bookProductInput, isBook, ...productData } = createProductInput;
 
-    const result = await this.bookProductService.create({
-      ...bookProduct,
+    let bookProduct = null;
+
+    if (isBook && bookProductInput) {
+      bookProduct = await this.bookProductsService.create({
+        bookProductInput,
+      });
+    }
+
+    const product = this.productsRepository.create({
+      ...productData,
+      bookProduct,
     });
 
-    const result2 = await this.productsRepository.save({
-      ...product,
-      bookProduct: result,
-    });
-
-    return result2;
+    return this.productsRepository.save(product);
   }
 
   async update({
@@ -75,7 +79,7 @@ export class ProductsService {
 
     if (product) {
       if (product.bookProduct) {
-        const result = await this.bookProductService.delete({
+        const result = await this.bookProductsService.delete({
           id: product.bookProduct.id,
         });
 
