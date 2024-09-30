@@ -2,20 +2,6 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-type User {
-  id: Float!
-  name: String!
-  email: String!
-  age: Int!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-}
-
-"""
-A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
-"""
-scalar DateTime
-
 type BookProduct {
   id: String!
   author: String!
@@ -25,6 +11,11 @@ type BookProduct {
   pages: Int!
   genre: String!
 }
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
 
 type Review {
   id: String!
@@ -51,9 +42,35 @@ type Product {
   isBook: Boolean!
   bookProduct: BookProduct
   reviews: [Review!]
+  productTags: [ProductTag!]
+}
+
+type CartItem {
+  id: String!
+  cart: Cart!
+  product: Product!
+  quantity: Int!
+}
+
+type Cart {
+  id: String!
+  user: User!
+  items: [CartItem!]!
+}
+
+type User {
+  id: String!
+  name: String!
+  email: String!
+  age: Int!
+  isSeller: Boolean!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  cart: Cart
 }
 
 type Query {
+  fetchUser: String!
   fetchProduct(productId: String!): Product!
   fetchProducts: [Product!]!
   fetchProductTag(productTagId: String!): ProductTag!
@@ -65,7 +82,9 @@ type Query {
 
 type Mutation {
   login(email: String!, password: String!): String!
+  restoreAccessToken: String!
   createUser(email: String!, password: String!, name: String!, age: Int!): User!
+  createCart: Cart!
   createProduct(createProductInput: CreateProductInput!): Product!
   updateProduct(productId: String!, updateProductInput: UpdateProductInput!): Product!
   deleteProduct(productId: String!): Boolean!
@@ -83,7 +102,7 @@ input CreateProductInput {
   description: String!
   price: Int!
   isBook: Boolean!
-  bookProduct: BookProductInput
+  bookProductInput: BookProductInput
 }
 
 input BookProductInput {
@@ -100,7 +119,7 @@ input UpdateProductInput {
   description: String
   price: Int
   isBook: Boolean
-  bookProduct: BookProductInput
+  bookProductInput: BookProductInput
   stock: Int
 }
 

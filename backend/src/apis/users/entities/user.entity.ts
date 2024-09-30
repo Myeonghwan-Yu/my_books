@@ -3,18 +3,18 @@ import {
   Column,
   CreateDateColumn,
   Entity,
-  OneToOne, // OneToOne 데코레이터 추가
+  OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { Cart } from 'src/apis/carts/entities/cart.entity'; // Cart 엔티티 import
+import { Cart } from 'src/apis/carts/entities/cart.entity';
 
 @ObjectType()
 @Entity()
 export class User {
-  @PrimaryGeneratedColumn()
-  @Field(() => Number)
-  id: number;
+  @PrimaryGeneratedColumn('uuid')
+  @Field(() => String)
+  id: string;
 
   @Column()
   @Field(() => String)
@@ -43,7 +43,7 @@ export class User {
   @Field(() => Date)
   updatedAt: Date;
 
-  @OneToOne(() => Cart, (cart) => cart.user) // Cart와 1:1 관계 정의
-  @Field(() => Cart, { nullable: true }) // GraphQL에 노출
+  @OneToOne(() => Cart, (cart) => cart.user, { onDelete: 'CASCADE' })
+  @Field(() => Cart, { nullable: true })
   cart: Cart;
 }

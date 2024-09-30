@@ -16,7 +16,7 @@ import { BookProduct } from 'src/apis/bookProducts/entitites/bookproduct.entity'
 import { Review } from 'src/apis/reivews/entities/review.entity';
 import { ProductTag } from 'src/apis/productTags/entities/productTag.entity';
 
-@ObjectType() // GraphQL 타입으로 정의
+@ObjectType()
 @Entity()
 export class Product {
   @Field(() => String)
@@ -66,7 +66,8 @@ export class Product {
   @OneToMany(() => Review, (review) => review.product)
   reviews?: Review[];
 
+  @Field(() => [ProductTag], { nullable: true })
   @ManyToMany(() => ProductTag, (productTag) => productTag.products)
   @JoinTable()
-  productTags: ProductTag[];
+  productTags?: ProductTag[];
 }

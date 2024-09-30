@@ -21,8 +21,9 @@ export class UsersService {
   }
 
   async findOneById({ userId }: IUsersServiceFindOneById): Promise<User> {
-    return this.usersRepository.findOne({ where: { id: Number(userId) } });
+    return this.usersRepository.findOne({ where: { id: userId } });
   }
+
   async create({
     email,
     password,

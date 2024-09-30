@@ -1,3 +1,4 @@
+import { Field, ObjectType } from '@nestjs/graphql';
 import { CartItem } from 'src/apis/cartItems/entities/cartitem.entity';
 import { User } from 'src/apis/users/entities/user.entity';
 import {
@@ -8,15 +9,19 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
+@ObjectType()
 @Entity()
 export class Cart {
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn('uuid')
+  @Field(() => String)
   id: string;
 
   @OneToOne(() => User, (user) => user.cart)
   @JoinColumn({ name: 'userId' })
+  @Field(() => User)
   user: User;
 
   @OneToMany(() => CartItem, (cartItem) => cartItem.cart, { cascade: true })
+  @Field(() => [CartItem])
   items: CartItem[];
 }

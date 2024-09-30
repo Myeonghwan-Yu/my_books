@@ -1,6 +1,7 @@
-import { AddToCartInput } from '../dto/add-to-cart-input';
+export interface ICartsServiceCreateCart {
+  userId: string;
+}
 
-export interface ICartsServiceAddToCart {
-  addToCartInput: AddToCartInput;
+export interface ICartsServiceFindOne {
   userId: string;
 }

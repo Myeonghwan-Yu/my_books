@@ -8,11 +8,13 @@ import { ProductsModule } from './apis/products/products.module';
 import { ReviewsModule } from './apis/reivews/reviews.module';
 import { ProductTagsModule } from './apis/productTags/productTags.module';
 import { AuthModule } from './apis/auth/auth.module';
+import { CartsModule } from './apis/carts/carts.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot(),
     AuthModule,
+    CartsModule,
     ProductsModule,
     ProductTagsModule,
     ReviewsModule,
