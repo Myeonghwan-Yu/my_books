@@ -9,16 +9,18 @@ import { ReviewsModule } from './apis/reivews/reviews.module';
 import { ProductTagsModule } from './apis/productTags/productTags.module';
 import { AuthModule } from './apis/auth/auth.module';
 import { CartsModule } from './apis/carts/carts.module';
+import { OrdersModule } from './apis/orders/orders.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot(),
     AuthModule,
     CartsModule,
+    OrdersModule,
     ProductsModule,
     ProductTagsModule,
     ReviewsModule,
-    UsersModule, //
+    UsersModule,
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
       autoSchemaFile: 'src/commons/graphql/schema.gql',

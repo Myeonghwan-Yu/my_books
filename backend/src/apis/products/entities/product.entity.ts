@@ -15,6 +15,7 @@ import { Min } from 'class-validator';
 import { BookProduct } from 'src/apis/bookProducts/entitites/bookproduct.entity';
 import { Review } from 'src/apis/reivews/entities/review.entity';
 import { ProductTag } from 'src/apis/productTags/entities/productTag.entity';
+import { OrderItem } from 'src/apis/orderItems/entities/orderItem.entity';
 
 @ObjectType()
 @Entity()
@@ -70,4 +71,8 @@ export class Product {
   @ManyToMany(() => ProductTag, (productTag) => productTag.products)
   @JoinTable()
   productTags?: ProductTag[];
+
+  @OneToMany(() => OrderItem, (orderItem) => orderItem.product)
+  @Field(() => [OrderItem])
+  orderItems?: OrderItem[];
 }

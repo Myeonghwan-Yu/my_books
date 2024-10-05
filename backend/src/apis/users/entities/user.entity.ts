@@ -3,11 +3,13 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 import { Cart } from 'src/apis/carts/entities/cart.entity';
+import { Order } from 'src/apis/orders/entities/order.entity';
 
 @ObjectType()
 @Entity()
@@ -46,4 +48,8 @@ export class User {
   @OneToOne(() => Cart, (cart) => cart.user, { onDelete: 'CASCADE' })
   @Field(() => Cart, { nullable: true })
   cart: Cart;
+
+  @OneToMany(() => Order, (order) => order.user)
+  @Field(() => [Order], { nullable: true })
+  orders: Order[]; // 사용자와의 관계 설정
 }
