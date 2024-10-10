@@ -23,5 +23,5 @@ export class Cart {
 
   @OneToMany(() => CartItem, (cartItem) => cartItem.cart, { cascade: true })
   @Field(() => [CartItem])
-  items: CartItem[];
+  cartItems: CartItem[];
 }

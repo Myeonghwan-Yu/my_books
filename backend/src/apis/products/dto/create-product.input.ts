@@ -7,6 +7,7 @@ import {
   IsString,
   ValidateIf,
 } from 'class-validator';
+import { FileUpload, GraphQLUpload } from 'graphql-upload';
 
 @InputType()
 export class BookProductInput {
@@ -62,6 +63,9 @@ export class CreateProductInput {
   @IsBoolean()
   @IsNotEmpty()
   isBook: boolean;
+
+  @Field(() => [GraphQLUpload], { nullable: true })
+  productImages?: FileUpload[];
 
   @Field(() => BookProductInput, { nullable: true })
   @ValidateIf((o) => o.isBook === true)

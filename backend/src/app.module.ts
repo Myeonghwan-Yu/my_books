@@ -10,6 +10,7 @@ import { ProductTagsModule } from './apis/productTags/productTags.module';
 import { AuthModule } from './apis/auth/auth.module';
 import { CartsModule } from './apis/carts/carts.module';
 import { OrdersModule } from './apis/orders/orders.module';
+import { ProductImagesModule } from './apis/productImages/productImages.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { OrdersModule } from './apis/orders/orders.module';
     CartsModule,
     OrdersModule,
     ProductsModule,
+    ProductImagesModule,
     ProductTagsModule,
     ReviewsModule,
     UsersModule,

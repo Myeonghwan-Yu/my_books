@@ -4,6 +4,7 @@
 
 설치한\패키지들: graphql, apollo-server @nestjs/config nestjs/typeorm typeorm mysql2 class-validator class-transformers
 jwt passport-jwt passport
+@google-cloud/storage graphql-upload @types/graphql-upload
 
 체크할 내용들 :
 중복검사 할 때 이름으로 조건을 걸면 안 됨.중복되는 상품 이름이 많아서 불가능함.
@@ -40,3 +41,9 @@ ENV에 스트레티지 비밀번호 빼기
 로그인 가드 제대로걸자!
 
 카트아이템도 안되어있네 ..ㅠㅠ
+아직 모자란부분 카트, 오더, 유저조회, 로그인API부분, 파일업로드
+마지막에, 관리자권한주고 관리자역할부여하기 추가
+
+카트상품추가할때 지금은 하나씩만하지만 여러개구현하기..
+장바구니에서 더하는API는 있는데... 빼는 API랑 같이만들어야하는데어렵다...
+!!카트아이템부분 다시하자

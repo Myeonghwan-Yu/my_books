@@ -15,6 +15,7 @@ import { Min } from 'class-validator';
 import { BookProduct } from 'src/apis/bookProducts/entitites/bookproduct.entity';
 import { Review } from 'src/apis/reivews/entities/review.entity';
 import { ProductTag } from 'src/apis/productTags/entities/productTag.entity';
+import { ProductImage } from 'src/apis/productImages/entities/productImage.entity';
 import { OrderItem } from 'src/apis/orderItems/entities/orderItem.entity';
 
 @ObjectType()
@@ -63,6 +64,13 @@ export class Product {
   @JoinColumn()
   bookProduct?: BookProduct;
 
+  @Field(() => ProductImage, { nullable: true })
+  @OneToOne(() => ProductImage, (productImage) => productImage.product, {
+    cascade: true,
+    nullable: true,
+  })
+  productImage?: ProductImage;
+
   @Field(() => [Review], { nullable: true })
   @OneToMany(() => Review, (review) => review.product)
   reviews?: Review[];
@@ -72,7 +80,16 @@ export class Product {
   @JoinTable()
   productTags?: ProductTag[];
 
+  @Field(() => [OrderItem], { nullable: true })
   @OneToMany(() => OrderItem, (orderItem) => orderItem.product)
-  @Field(() => [OrderItem])
   orderItems?: OrderItem[];
+
+  @Field(() => [ProductImage], { nullable: true })
+  @OneToMany(() => ProductImage, (productImage) => productImage.product, {
+    nullable: true,
+    cascade: true,
+    onDelete: 'CASCADE',
+  })
+  @JoinColumn()
+  productImages?: ProductImage[];
 }

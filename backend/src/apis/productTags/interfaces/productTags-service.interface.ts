@@ -17,3 +17,7 @@ export class IProductTagsServiceUpdate {
 export class IProductTagsServiceDelete {
   productTagId: string;
 }
+
+export class IProductTagsServiceFindProductsByTag {
+  productTagId: string;
+}

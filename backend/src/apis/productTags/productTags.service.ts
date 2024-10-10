@@ -5,6 +5,7 @@ import { ProductTag } from './entities/productTag.entity';
 import {
   IProductTagsServiceCreate,
   IProductTagsServiceDelete,
+  IProductTagsServiceFindProductsByTag,
   IProductTagsServiceFinone,
   IProductTagsServiceUpdate,
 } from './interfaces/productTags-service.interface';
@@ -65,11 +66,10 @@ export class ProductTagsService {
     return true;
   }
 
-  async findProductsByTag(tagId: string): Promise<Product[]> {
-    const productTag = await this.productTagsRepository.findOne({
-      where: { id: tagId },
-      relations: ['products'],
-    });
+  async findProductsByTag({
+    productTagId,
+  }: IProductTagsServiceFindProductsByTag): Promise<Product[]> {
+    const productTag = await this.findOne({ productTagId });
 
     if (!productTag) {
       throw new NotFoundException('태그를 찾을 수 없습니다');

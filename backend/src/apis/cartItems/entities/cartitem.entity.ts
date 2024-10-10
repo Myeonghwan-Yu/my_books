@@ -10,7 +10,7 @@ export class CartItem {
   @Field(() => String)
   id: string;
 
-  @ManyToOne(() => Cart, (cart) => cart.items)
+  @ManyToOne(() => Cart, (cart) => cart.cartItems)
   @Field(() => Cart)
   cart: Cart;
 

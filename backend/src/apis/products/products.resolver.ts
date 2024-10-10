@@ -11,14 +11,14 @@ export class ProductsResolver {
   ) {}
 
   @Query(() => Product)
-  fetchProduct(
+  async fetchProduct(
     @Args('productId') productId: string, //
   ): Promise<Product> {
     return this.productsService.findOne({ productId });
   }
 
   @Query(() => [Product])
-  fetchProducts(): Promise<Product[]> {
+  async fetchProducts(): Promise<Product[]> {
     return this.productsService.findAll();
   }
 

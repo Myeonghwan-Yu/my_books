@@ -54,6 +54,6 @@ export class ProductTagsResolver {
   async fetchProductsByTag(
     @Args('productTagId') productTagId: string,
   ): Promise<Product[]> {
-    return this.productTagsService.findProductsByTag(productTagId);
+    return this.productTagsService.findProductsByTag({ productTagId });
   }
 }

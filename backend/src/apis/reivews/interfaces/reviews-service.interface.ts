@@ -11,14 +11,14 @@ export class IReviewsServiceUpdate {
   updateReviewInput: UpdateReviewInput;
 }
 
-export class IReviewServiceDelete {
+export class IReviewsServiceDelete {
   reviewId: string;
 }
 
-export class IReivewServiceFindOne {
+export class IReviewsServiceFindOne {
   reviewId: string;
 }
 
-export class IReviewServiceFindAll {
+export class IReviewsServiceFindAll {
   productId: string;
 }
