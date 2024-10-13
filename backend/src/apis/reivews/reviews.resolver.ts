@@ -10,6 +10,16 @@ export class ReviewsResolver {
     private readonly reviewsService: ReviewsService, //
   ) {}
 
+  @Query(() => Review)
+  async fetchReview(@Args('reviewId') reviewId: string) {
+    return this.reviewsService.findOne({ reviewId });
+  }
+
+  @Query(() => [Review])
+  async fetchReviews(@Args('productId') productId: string): Promise<Review[]> {
+    return await this.reviewsService.findAll({ productId });
+  }
+
   @Mutation(() => Review)
   async createReview(
     @Args('productId') productId: string,
@@ -32,15 +42,5 @@ export class ReviewsResolver {
     @Args('updateReviewInput') updateReviewInput: UpdateReviewInput,
   ): Promise<Review> {
     return this.reviewsService.update({ reviewId, updateReviewInput });
-  }
-
-  @Query(() => Review)
-  async fetchReview(@Args('reviewId') reviewId: string) {
-    return this.reviewsService.findOne({ reviewId });
-  }
-
-  @Query(() => [Review])
-  async fetchReviews(@Args('productId') productId: string): Promise<Review[]> {
-    return await this.reviewsService.findAll({ productId });
   }
 }

@@ -41,6 +41,7 @@ export class ProductsService {
 
   async create({
     createProductInput,
+    files,
   }: IProductsServiceCreate): Promise<Product> {
     const { bookProductInput, isBook, ...productData } = createProductInput;
 
@@ -52,9 +53,16 @@ export class ProductsService {
       });
     }
 
+    let productImages = [];
+    if (files && files.length > 0) {
+      productImages =
+        await this.productImagesService.createProductImages(files);
+    }
+
     const product = this.productsRepository.create({
       ...productData,
       bookProduct,
+      productImages,
     });
 
     return this.productsRepository.save(product);

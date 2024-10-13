@@ -13,15 +13,6 @@ export class ProductTagsResolver {
     private readonly productTagsService: ProductTagsService, //
   ) {}
 
-  @Mutation(() => ProductTag)
-  async createProductTag(
-    @Args('createProductTagInput') createProductTagInput: CreateProductTagInput, // @Args 데코레이터 추가
-  ): Promise<ProductTag> {
-    const result = this.productTagsService.create({ createProductTagInput });
-
-    return result;
-  }
-
   @Query(() => ProductTag)
   async fetchProductTag(@Args('productTagId') productTagId: string) {
     return this.productTagsService.findOne({ productTagId });
@@ -33,8 +24,17 @@ export class ProductTagsResolver {
   }
 
   @Mutation(() => ProductTag)
+  async createProductTag(
+    @Args('createProductTagInput') createProductTagInput: CreateProductTagInput,
+  ): Promise<ProductTag> {
+    const result = this.productTagsService.create({ createProductTagInput });
+
+    return result;
+  }
+
+  @Mutation(() => ProductTag)
   async updateProductTag(
-    @Args('producTagId') productTagId: string,
+    @Args('productTagId') productTagId: string,
     @Args('updateProductTagInput') updateProductTagInput: UpdateProductTagInput,
   ): Promise<ProductTag> {
     return this.productTagsService.update({

@@ -20,11 +20,11 @@ export enum PaymentStatus {
 @ObjectType()
 @Entity()
 export class Order {
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn('uuid')
   @Field(() => String)
   id: string;
 
-  @Column({ type: 'decimal', precision: 10, scale: 2 })
+  @Column({ type: 'int' })
   @Field(() => Number)
   totalPrice: number;
 

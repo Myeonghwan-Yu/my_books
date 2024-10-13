@@ -1,8 +1,10 @@
+import { FileUpload } from 'graphql-upload';
 import { CreateProductInput } from '../dto/create-product.input';
 import { UpdateProductInput } from '../dto/update-product.input';
 
 export interface IProductsServiceCreate {
   createProductInput: CreateProductInput;
+  files: FileUpload[];
 }
 
 export interface IProductsServiceFindOne {

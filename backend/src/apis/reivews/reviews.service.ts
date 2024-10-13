@@ -19,23 +19,6 @@ export class ReviewsService {
     private readonly productsService: ProductsService,
   ) {}
 
-  async create({
-    productId,
-    createReviewInput,
-  }: IReviewsServiceCreate): Promise<Review> {
-    const product = await this.productsService.findOne({ productId });
-
-    if (!product) {
-      throw new Error('해당 상품이 존재하지 않습니다.');
-    }
-    const review = this.reviewsRepository.create({
-      ...createReviewInput,
-      product,
-    });
-
-    return this.reviewsRepository.save(review);
-  }
-
   async findOne({ reviewId }: IReviewsServiceFindOne): Promise<Review> {
     const review = await this.reviewsRepository.findOne({
       where: { id: reviewId },
@@ -52,6 +35,23 @@ export class ReviewsService {
     return await this.reviewsRepository.find({
       where: { product: { id: productId } },
     });
+  }
+
+  async create({
+    productId,
+    createReviewInput,
+  }: IReviewsServiceCreate): Promise<Review> {
+    const product = await this.productsService.findOne({ productId });
+
+    if (!product) {
+      throw new Error('해당 상품이 존재하지 않습니다.');
+    }
+    const review = this.reviewsRepository.create({
+      ...createReviewInput,
+      product,
+    });
+
+    return this.reviewsRepository.save(review);
   }
 
   async delete({ reviewId }: IReviewsServiceDelete): Promise<boolean> {

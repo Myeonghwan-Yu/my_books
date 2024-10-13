@@ -9,4 +9,6 @@ export class OrdersService {
     @InjectRepository(Order)
     private readonly ordersRepository: Repository<Order>, //
   ) {}
+
+  create() {}
 }

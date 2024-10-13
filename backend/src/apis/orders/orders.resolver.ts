@@ -6,4 +6,6 @@ export class OrdersResolver {
   constructor(
     private readonly ordersService: OrdersService, //
   ) {}
+
+  createOrder() {}
 }

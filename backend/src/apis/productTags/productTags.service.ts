@@ -5,8 +5,8 @@ import { ProductTag } from './entities/productTag.entity';
 import {
   IProductTagsServiceCreate,
   IProductTagsServiceDelete,
+  IProductTagsServiceFindOne,
   IProductTagsServiceFindProductsByTag,
-  IProductTagsServiceFinone,
   IProductTagsServiceUpdate,
 } from './interfaces/productTags-service.interface';
 import { Product } from '../products/entities/product.entity';
@@ -29,7 +29,7 @@ export class ProductTagsService {
 
   async findOne({
     productTagId,
-  }: IProductTagsServiceFinone): Promise<ProductTag> {
+  }: IProductTagsServiceFindOne): Promise<ProductTag> {
     return this.productTagsRepository.findOne({ where: { id: productTagId } });
   }
 

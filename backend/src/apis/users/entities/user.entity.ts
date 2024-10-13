@@ -51,5 +51,5 @@ export class User {
 
   @OneToMany(() => Order, (order) => order.user)
   @Field(() => [Order], { nullable: true })
-  orders: Order[]; // 사용자와의 관계 설정
+  orders: Order[];
 }

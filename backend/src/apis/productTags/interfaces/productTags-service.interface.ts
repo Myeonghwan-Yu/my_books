@@ -5,7 +5,7 @@ export class IProductTagsServiceCreate {
   createProductTagInput: CreateProductTagInput;
 }
 
-export class IProductTagsServiceFinone {
+export class IProductTagsServiceFindOne {
   productTagId: string;
 }
 

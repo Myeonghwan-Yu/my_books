@@ -8,6 +8,7 @@ import {
   IAuthServiceSetRefreshToken,
 } from './interfaces/auth-service.interface';
 import { JwtService } from '@nestjs/jwt';
+import { IContext } from 'src/commons/interfaces/context';
 
 @Injectable()
 export class AuthService {
@@ -37,10 +38,6 @@ export class AuthService {
     return this.getAccessToken({ user });
   }
 
-  restoreAccessToken({ user }: IAuthServiceRestoreAccessToken): string {
-    return this.getAccessToken({ user });
-  }
-
   setRefreshToken({ user, context }: IAuthServiceSetRefreshToken): void {
     const refreshToken = this.jwtService.sign(
       { sub: user.id },
@@ -57,6 +54,17 @@ export class AuthService {
     return this.jwtService.sign(
       { sub: user.id },
       { secret: '나의비밀번호', expiresIn: '1h' },
+    );
+  }
+
+  restoreAccessToken({ user }: IAuthServiceRestoreAccessToken): string {
+    return this.getAccessToken({ user });
+  }
+
+  logOut(context: IContext): void {
+    context.res.setHeader(
+      'set-Cookie',
+      `refreshToken=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT;`,
     );
   }
 }

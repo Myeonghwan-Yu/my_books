@@ -17,7 +17,7 @@ export class Cart {
   id: string;
 
   @OneToOne(() => User, (user) => user.cart)
-  @JoinColumn({ name: 'userId' })
+  @JoinColumn()
   @Field(() => User)
   user: User;
 
