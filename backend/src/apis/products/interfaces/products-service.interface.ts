@@ -20,7 +20,7 @@ export interface IProductsServiceDelete {
   productId: string;
 }
 
-export interface IProductServiceAddProductTag {
+export interface IProductsServiceAddProductTag {
   productId: string;
   productTagId: string;
 }

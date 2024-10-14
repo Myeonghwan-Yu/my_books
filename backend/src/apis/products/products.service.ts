@@ -8,7 +8,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Product } from './entities/product.entity';
 import { Repository } from 'typeorm';
 import {
-  IProductServiceAddProductTag,
+  IProductsServiceAddProductTag,
   IProductsServiceCreate,
   IProductsServiceDelete,
   IProductsServiceFindOne,
@@ -16,6 +16,7 @@ import {
 } from './interfaces/products-service.interface';
 import { BookProductsService } from '../bookProducts/bookProducts.service';
 import { ProductTagsService } from '../productTags/productTags.service';
+import { productImagesService } from '../productImages/productImages.service';
 
 @Injectable({ scope: Scope.DEFAULT })
 export class ProductsService {
@@ -23,6 +24,7 @@ export class ProductsService {
     @InjectRepository(Product)
     private readonly productsRepository: Repository<Product>,
     private readonly bookProductsService: BookProductsService,
+    private readonly productImagesService: productImagesService,
     private readonly productTagsService: ProductTagsService,
   ) {}
 
@@ -55,8 +57,7 @@ export class ProductsService {
 
     let productImages = [];
     if (files && files.length > 0) {
-      productImages =
-        await this.productImagesService.createProductImages(files);
+      productImages = await this.productImagesService.upload(files);
     }
 
     const product = this.productsRepository.create({
@@ -105,7 +106,7 @@ export class ProductsService {
   async addProductTag({
     productId,
     productTagId,
-  }: IProductServiceAddProductTag): Promise<Product> {
+  }: IProductsServiceAddProductTag): Promise<Product> {
     const product = await this.productsRepository.findOne({
       where: { id: productId },
       relations: ['productTags'],

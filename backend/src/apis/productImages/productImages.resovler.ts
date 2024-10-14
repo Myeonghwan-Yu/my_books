@@ -1,5 +1,5 @@
 import { Args, Mutation, Resolver } from '@nestjs/graphql';
-import { productImagesService } from './productImags.service';
+import { productImagesService } from './productImages.service';
 import { FileUpload, GraphQLUpload } from 'graphql-upload';
 
 @Resolver()

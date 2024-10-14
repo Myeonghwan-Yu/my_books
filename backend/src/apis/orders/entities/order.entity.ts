@@ -26,7 +26,7 @@ export class Order {
 
   @Column({ type: 'int' })
   @Field(() => Number)
-  totalPrice: number;
+  orderTotalPrice: number;
 
   @CreateDateColumn()
   @Field(() => Date)

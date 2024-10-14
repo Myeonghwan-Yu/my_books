@@ -24,5 +24,5 @@ export class OrderItem {
 
   @Column({ type: 'int' })
   @Field(() => Number)
-  totalPrice: number;
+  itemTotalPrice: number;
 }
