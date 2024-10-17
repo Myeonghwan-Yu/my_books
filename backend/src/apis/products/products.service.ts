@@ -9,6 +9,7 @@ import { Product } from './entities/product.entity';
 import { Repository } from 'typeorm';
 import {
   IProductsServiceAddProductTag,
+  IProductsServiceCheckSoldOut,
   IProductsServiceCreate,
   IProductsServiceDelete,
   IProductsServiceFindOne,
@@ -125,5 +126,22 @@ export class ProductsService {
     product.productTags.push(productTag);
 
     return this.productsRepository.save(product);
+  }
+
+  async checkSoldOut({
+    productId,
+    quantity,
+  }: IProductsServiceCheckSoldOut): Promise<Product> {
+    const product = await this.findOne({ productId });
+
+    if (!product) {
+      throw new NotFoundException('상품이 존재하지 않습니다.');
+    }
+
+    if (quantity > product.stock) {
+      throw new Error(`${product.name}의 재고가 부족합니다.`);
+    }
+
+    return product;
   }
 }

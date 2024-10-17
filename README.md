@@ -5,6 +5,7 @@
 설치한\패키지들: graphql, apollo-server @nestjs/config nestjs/typeorm typeorm mysql2 class-validator class-transformers
 jwt passport-jwt passport
 @google-cloud/storage graphql-upload @types/graphql-upload
+nodemailer
 에러미들웨어
 
 체크할 내용들 :

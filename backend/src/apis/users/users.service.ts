@@ -76,7 +76,10 @@ export class UsersService {
       throw new NotFoundException('해당 유저를 찾을 수 없습니다.');
     }
 
-    const result = await this.usersRepository.delete({ id: userId });
+    const result = await this.usersRepository.update(
+      { id: userId },
+      { deletedAt: new Date() },
+    );
 
     return result.affected ? true : false;
   }

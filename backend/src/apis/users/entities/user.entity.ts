@@ -45,6 +45,10 @@ export class User {
   @Field(() => Date)
   updatedAt: Date;
 
+  @Column({ nullable: true })
+  @Field(() => Date)
+  deletedAt: Date;
+
   @OneToOne(() => Cart, (cart) => cart.user, { onDelete: 'CASCADE' })
   @Field(() => Cart, { nullable: true })
   cart: Cart;

@@ -4,7 +4,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { Repository } from 'typeorm';
-import { Order, PaymentStatus } from './entities/order.entity';
+import { Order } from './entities/order.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import {
   IOrdersServiceCreate,
@@ -48,34 +48,34 @@ export class OrdersService {
     userId,
     createOrderInput,
   }: IOrdersServiceCreate): Promise<Order> {
-    const order = this.ordersRepository.create({
+    const order = await this.ordersRepository.save({
       user: { id: userId },
       orderItems: [],
-      paymentStatus: PaymentStatus.PENDING,
     });
 
-    let totalPrice = 0;
+    const orderItems = [];
 
     for (const item of createOrderInput.orderItems) {
-      const product = await this.productsService.findOne(item.productId);
-      const orderItemPrice = product.price * item.quantity;
-
-      const orderItem = this.orderItemsService.create({
-        product,
+      const product = await this.productsService.checkSoldOut({
+        productId: item.productId,
         quantity: item.quantity,
-        totalPrice: orderItemPrice,
       });
 
-      order.orderItems.push(orderItem);
+      const itemTotalPrice = product.price * item.quantity;
 
-      totalPrice += orderItemPrice;
+      const orderItem = await this.orderItemsService.create({
+        orderId: order.id,
+        productId: item.productId,
+        quantity: item.quantity,
+        itemTotalPrice: itemTotalPrice,
+      });
+
+      orderItems.push(orderItem);
     }
 
-    order.orderTotalPrice = totalPrice;
+    order.orderItems = orderItems;
 
-    await this.orderItemsService.save(order.orderItems);
-
-    return this.ordersRepository.save(order);
+    return await this.ordersRepository.save(order);
   }
 
   async delete({ orderId, userId }: IOrdersServiceDelete): Promise<boolean> {
@@ -92,7 +92,7 @@ export class OrdersService {
       throw new ForbiddenException('본인이 생성한 주문만 삭제할 수 있습니다.');
     }
 
-    await this.ordersRepository.delete({ id: orderId });
+    this.ordersRepository.update({ id: orderId }, { deletedAt: new Date() });
 
     return true;
   }

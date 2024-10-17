@@ -36,6 +36,10 @@ export class Order {
   @Field(() => Date)
   updatedAt: Date;
 
+  @Column({ nullable: true })
+  @Field(() => Date)
+  deletedAt: Date;
+
   @Column({ type: 'enum', enum: PaymentStatus, default: PaymentStatus.PENDING })
   @Field(() => String)
   paymentStatus: PaymentStatus;

@@ -24,3 +24,8 @@ export interface IProductsServiceAddProductTag {
   productId: string;
   productTagId: string;
 }
+
+export interface IProductsServiceCheckSoldOut {
+  productId: string;
+  quantity: number;
+}
