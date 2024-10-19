@@ -67,7 +67,7 @@ export class OrdersService {
         orderId: order.id,
         productId: item.productId,
         quantity: item.quantity,
-        itemTotalPrice: itemTotalPrice,
+        itemTotalPrice,
       });
 
       orderItems.push(orderItem);

@@ -26,7 +26,7 @@ export class OrderItemService {
       order: { id: order.id },
       product: { id: product.id },
       quantity,
-      itemTotalPrice: itemTotalPrice,
+      itemTotalPrice,
     });
 
     return await this.orderItemsRepository.save(orderItem);

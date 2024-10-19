@@ -26,7 +26,7 @@ export class ProductsResolver {
   async createProduct(
     @Args('createProductInput') createProductInput: CreateProductInput,
   ): Promise<Product> {
-    return this.productsService.create({ createProductInput, files });
+    return this.productsService.create({ createProductInput });
   }
 
   @Mutation(() => Product)

@@ -6,9 +6,13 @@
 jwt passport-jwt passport
 @google-cloud/storage graphql-upload @types/graphql-upload
 nodemailer
-에러미들웨어
+
+그 외 설정해준 부분들: 에러미들웨어, .env.docker, 도커야믈파일 경로설정,
 
 체크할 내용들 :
+
+결제 부분 필요함.
+
 중복검사 할 때 이름으로 조건을 걸면 안 됨.중복되는 상품 이름이 많아서 불가능함.
 어떻게 할지 고민..
 

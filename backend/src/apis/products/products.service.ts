@@ -17,7 +17,7 @@ import {
 } from './interfaces/products-service.interface';
 import { BookProductsService } from '../bookProducts/bookProducts.service';
 import { ProductTagsService } from '../productTags/productTags.service';
-import { productImagesService } from '../productImages/productImages.service';
+import { ProductImagesService } from '../productImages/productImages.service';
 
 @Injectable({ scope: Scope.DEFAULT })
 export class ProductsService {
@@ -25,28 +25,28 @@ export class ProductsService {
     @InjectRepository(Product)
     private readonly productsRepository: Repository<Product>,
     private readonly bookProductsService: BookProductsService,
-    private readonly productImagesService: productImagesService,
+    private readonly productImagesService: ProductImagesService,
     private readonly productTagsService: ProductTagsService,
   ) {}
 
   async findAll(): Promise<Product[]> {
     return this.productsRepository.find({
-      relations: ['bookProduct'],
+      relations: ['bookProduct', 'productImages'],
     });
   }
 
   async findOne({ productId }: IProductsServiceFindOne): Promise<Product> {
     return this.productsRepository.findOne({
       where: { id: productId },
-      relations: ['bookProduct'],
+      relations: ['bookProduct', 'productImages'],
     });
   }
 
   async create({
     createProductInput,
-    files,
   }: IProductsServiceCreate): Promise<Product> {
-    const { bookProductInput, isBook, ...productData } = createProductInput;
+    const { bookProductInput, isBook, productImages, ...productData } =
+      createProductInput;
 
     let bookProduct = null;
 
@@ -56,15 +56,17 @@ export class ProductsService {
       });
     }
 
-    let productImages = [];
-    if (files && files.length > 0) {
-      productImages = await this.productImagesService.upload(files);
+    let uploadedImages = [];
+    if (productImages && productImages.length > 0) {
+      uploadedImages = await this.productImagesService.upload({
+        productImages,
+      });
     }
 
     const product = this.productsRepository.create({
       ...productData,
       bookProduct,
-      productImages,
+      productImages: uploadedImages,
     });
 
     return this.productsRepository.save(product);
@@ -79,6 +81,7 @@ export class ProductsService {
     const result = await this.productsRepository.save({
       ...product,
       ...updateProductInput,
+      productImages: product.productImages,
     });
 
     return result;
@@ -108,11 +111,7 @@ export class ProductsService {
     productId,
     productTagId,
   }: IProductsServiceAddProductTag): Promise<Product> {
-    const product = await this.productsRepository.findOne({
-      where: { id: productId },
-      relations: ['productTags'],
-    });
-
+    const product = await this.findOne({ productId });
     const productTag = await this.productTagsService.findOne({ productTagId });
 
     if (!product || !productTag) {
