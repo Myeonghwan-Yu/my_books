@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DataSource, Repository } from 'typeorm';
 import {
@@ -8,7 +12,8 @@ import {
 import { UsersService } from '../users/users.service';
 import {
   IPaymentTransactionsServiceCreate,
-  IPaymentTransactionsServiceFindAllByUserId,
+  IPaymentTransactionsServiceFindAll,
+  IPaymentTransactionsServiceFindOne,
 } from './interfaces/payment-transactions-service.interface';
 
 @Injectable()
@@ -20,15 +25,41 @@ export class PaymentTransactionsService {
     private readonly dataSource: DataSource,
   ) {}
 
-  async findAllByUserId({
+  async findOne({
+    impUid,
     userId,
-  }: IPaymentTransactionsServiceFindAllByUserId): Promise<
-    PaymentTransaction[]
-  > {
-    return await this.paymentTransactionsRepository.find({
+  }: IPaymentTransactionsServiceFindOne): Promise<PaymentTransaction> {
+    if (!impUid) {
+      throw new BadRequestException('유효하지 않은 impUid입니다.');
+    }
+
+    const transaction = await this.paymentTransactionsRepository.findOne({
+      where: {
+        impUid,
+        user: { id: userId },
+      },
+    });
+
+    if (!transaction) {
+      throw new NotFoundException('해당 결제 거래를 찾을 수 없습니다.');
+    }
+
+    return transaction;
+  }
+
+  async findAll({
+    userId,
+  }: IPaymentTransactionsServiceFindAll): Promise<PaymentTransaction[]> {
+    const transactions = await this.paymentTransactionsRepository.find({
       where: { user: { id: userId } },
       order: { createdAt: 'DESC' },
     });
+
+    if (!transactions || transactions.length === 0) {
+      throw new NotFoundException('해당 유저의 결제 거래가 없습니다.');
+    }
+
+    return transactions;
   }
 
   async create({

@@ -12,12 +12,26 @@ export class PaymentTransactionsResolver {
   ) {}
 
   @UseGuards(GqlAuthGuard('access'))
+  @Query(() => PaymentTransaction)
+  async fetchPaymentTransaction(
+    @Args('impUid') impUid: string,
+    @Context() context: IContext,
+  ): Promise<PaymentTransaction> {
+    const userId = context.req.user.id;
+
+    return this.paymentTransactionsService.findOne({
+      impUid,
+      userId,
+    });
+  }
+
+  @UseGuards(GqlAuthGuard('access'))
   @Query(() => [PaymentTransaction])
   async fetchPaymentTransactions(
     @Context() context: IContext,
   ): Promise<PaymentTransaction[]> {
     const userId = context.req.user.id;
-    return this.paymentTransactionsService.findAllByUserId({ userId });
+    return this.paymentTransactionsService.findAll({ userId });
   }
 
   @UseGuards(GqlAuthGuard('access'))

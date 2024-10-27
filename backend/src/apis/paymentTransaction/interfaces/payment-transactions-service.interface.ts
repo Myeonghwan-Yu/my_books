@@ -6,6 +6,11 @@ export interface IPaymentTransactionsServiceCreate {
   user: IAuthUser['user'];
 }
 
-export interface IPaymentTransactionsServiceFindAllByUserId {
+export interface IPaymentTransactionsServiceFindOne {
+  impUid: string;
+  userId: string;
+}
+
+export interface IPaymentTransactionsServiceFindAll {
   userId: string;
 }
