@@ -10,7 +10,7 @@ import { ProductTagsModule } from './apis/productTags/productTags.module';
 import { AuthModule } from './apis/auth/auth.module';
 import { CartsModule } from './apis/carts/carts.module';
 import { OrdersModule } from './apis/orders/orders.module';
-import { ProductImagesModule } from './apis/productImages/productImages.module';
+import { PaymentTransactionsModule } from './apis/paymentTransaction/pointsTransactions.module';
 
 @Module({
   imports: [
@@ -18,8 +18,8 @@ import { ProductImagesModule } from './apis/productImages/productImages.module';
     AuthModule,
     CartsModule,
     OrdersModule,
+    PaymentTransactionsModule,
     ProductsModule,
-    ProductImagesModule,
     ProductTagsModule,
     ReviewsModule,
     UsersModule,

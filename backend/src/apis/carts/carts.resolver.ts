@@ -6,13 +6,11 @@ import { GqlAuthGuard } from '../auth/guards/gql-auth.guard';
 import { IContext } from 'src/commons/interfaces/context';
 import { AddProductToCartInput } from './dto/add-product-to-cart-input';
 import { UpdateCartInput } from './dto/update-cart-input';
-import { CartItemsService } from '../cartItems/cartItems.service';
 
 @Resolver()
 export class CartsResolver {
   constructor(
     private readonly cartsService: CartsService, //
-    private readonly cartItemsService: CartItemsService,
   ) {}
 
   @Query(() => Cart)
@@ -69,6 +67,6 @@ export class CartsResolver {
     @Args('productId') productId: string,
   ): Promise<boolean> {
     const userId = context.req.user.id;
-    return this.cartItemsService.delete({ userId, productId });
+    return this.cartsService.deleteCartItem({ userId, productId });
   }
 }

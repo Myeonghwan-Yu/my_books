@@ -6,7 +6,7 @@ import {
 } from '@nestjs/common';
 import { User } from './entities/user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { EntityManager, Repository } from 'typeorm';
 import {
   IUsersServiceCreate,
   IUsersServiceDelete,
@@ -51,20 +51,24 @@ export class UsersService {
     return this.usersRepository.save(newUser);
   }
 
-  async update({
-    userId,
-    updateUserInput,
-  }: IUsersServiceUpdate): Promise<User> {
+  async update(
+    { userId, updateUserInput }: IUsersServiceUpdate,
+    manager?: EntityManager,
+  ): Promise<User> {
     const user = await this.findOneById({ userId });
 
     if (!user) {
       throw new NotFoundException('해당 유저를 찾을 수 없습니다.');
     }
 
-    const result = await this.usersRepository.save({
+    const updatedUser = this.usersRepository.create({
       ...user,
       ...updateUserInput,
     });
+
+    const result = await (
+      manager ? manager.getRepository(User) : this.usersRepository
+    ).save(updatedUser);
 
     return result;
   }

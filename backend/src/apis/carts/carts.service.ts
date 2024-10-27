@@ -12,7 +12,8 @@ import { UsersService } from '../users/users.service';
 import {
   ICartsServiceAddProductToCart,
   ICartsServiceCreateCart,
-  ICartsServiceDelete,
+  ICartsServiceDeleteCart,
+  ICartsServiceDeleteCartItem,
   ICartsServiceFindOne,
   ICartsServiceUpdateCartItem,
 } from './interfaces/carts-service.interface';
@@ -142,7 +143,7 @@ export class CartsService {
     return this.cartsRepository.save(cart);
   }
 
-  async deleteCart({ userId }: ICartsServiceDelete): Promise<boolean> {
+  async deleteCart({ userId }: ICartsServiceDeleteCart): Promise<boolean> {
     const user = await this.usersService.findOneById({ userId });
     if (!user) {
       throw new NotFoundException('사용자를 찾을 수 없습니다.');
@@ -154,6 +155,32 @@ export class CartsService {
     }
 
     await this.cartsRepository.delete({ id: cart.id });
+
+    return true;
+  }
+
+  async deleteCartItem({
+    userId,
+    productId,
+  }: ICartsServiceDeleteCartItem): Promise<boolean> {
+    const user = await this.usersService.findOneById({ userId });
+    if (!user) {
+      throw new NotFoundException('사용자를 찾을 수 없습니다.');
+    }
+
+    const cart = await this.findOne({ userId });
+    if (!cart) {
+      throw new NotFoundException('해당 유저의 카트를 찾을 수 없습니다.');
+    }
+
+    const cartItem = cart.cartItems.find(
+      (item) => item.product.id === productId,
+    );
+    if (!cartItem) {
+      throw new NotFoundException('해당 상품이 카트에 존재하지 않습니다.');
+    }
+
+    await this.cartItemsService.delete({ cartItemId: cartItem.id });
 
     return true;
   }

@@ -33,6 +33,10 @@ export class User {
   @Field(() => Int)
   age: number;
 
+  @Column({ default: 0 })
+  @Field(() => Int)
+  point: number;
+
   @Column({ default: false })
   @Field(() => Boolean)
   isSeller: boolean;

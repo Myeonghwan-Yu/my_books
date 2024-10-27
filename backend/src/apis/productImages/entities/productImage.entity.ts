@@ -11,7 +11,7 @@ export class ProductImage {
 
   @Field(() => String)
   @Column()
-  imageUrl: string; // 이미지 URL 추가
+  imageUrl: string;
 
   @Field(() => Product)
   @ManyToOne(() => Product, (product) => product.productImages)

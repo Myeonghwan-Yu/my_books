@@ -19,6 +19,11 @@ export interface ICartsServiceUpdateCartItem {
   updateCartInput: UpdateCartInput;
 }
 
-export interface ICartsServiceDelete {
+export interface ICartsServiceDeleteCart {
   userId: string;
+}
+
+export interface ICartsServiceDeleteCartItem {
+  userId: string;
+  productId: string;
 }

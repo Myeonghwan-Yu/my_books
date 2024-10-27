@@ -8,6 +8,5 @@ export interface ICartItemsServiceAdd {
 }
 
 export interface ICartItemsServiceDelete {
-  userId: string;
-  productId: string;
+  cartItemId: string;
 }

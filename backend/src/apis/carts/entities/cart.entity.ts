@@ -1,5 +1,5 @@
 import { Field, ObjectType } from '@nestjs/graphql';
-import { CartItem } from 'src/apis/cartItems/entities/cartitem.entity';
+import { CartItem } from 'src/apis/cartItems/entities/cartItem.entity';
 import { User } from 'src/apis/users/entities/user.entity';
 import {
   Entity,

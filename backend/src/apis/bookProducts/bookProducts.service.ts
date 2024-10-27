@@ -20,8 +20,10 @@ export class BookProductsService {
     return await this.bookProductsRepository.save({ ...bookProductInput });
   }
 
-  async delete({ id }: IBookProductServiceDelete): Promise<boolean> {
-    const result = await this.bookProductsRepository.delete({ id });
+  async delete({ bookProductId }: IBookProductServiceDelete): Promise<boolean> {
+    const result = await this.bookProductsRepository.delete({
+      id: bookProductId,
+    });
     return result.affected && result.affected > 0;
   }
 }

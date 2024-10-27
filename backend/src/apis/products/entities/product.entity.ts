@@ -64,13 +64,6 @@ export class Product {
   @JoinColumn()
   bookProduct?: BookProduct;
 
-  @Field(() => ProductImage, { nullable: true })
-  @OneToOne(() => ProductImage, (productImage) => productImage.product, {
-    cascade: true,
-    nullable: true,
-  })
-  productImage?: ProductImage;
-
   @Field(() => [Review], { nullable: true })
   @OneToMany(() => Review, (review) => review.product)
   reviews?: Review[];

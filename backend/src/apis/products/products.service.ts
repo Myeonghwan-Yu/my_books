@@ -93,7 +93,7 @@ export class ProductsService {
     if (product) {
       if (product.bookProduct) {
         const result = await this.bookProductsService.delete({
-          id: product.bookProduct.id,
+          bookProductId: product.bookProduct.id,
         });
 
         if (!result) {

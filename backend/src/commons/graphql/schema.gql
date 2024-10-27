@@ -31,6 +31,31 @@ type ProductTag {
   products: [Product!]!
 }
 
+type ProductImage {
+  id: String!
+  imageUrl: String!
+  product: Product!
+}
+
+type Order {
+  id: String!
+  orderTotalPrice: Float!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime!
+  paymentStatus: String!
+  user: User!
+  orderItems: [OrderItem!]!
+}
+
+type OrderItem {
+  id: String!
+  order: Order!
+  product: Product!
+  quantity: Float!
+  itemTotalPrice: Float!
+}
+
 type Product {
   id: String!
   name: String!
@@ -43,6 +68,8 @@ type Product {
   bookProduct: BookProduct
   reviews: [Review!]
   productTags: [ProductTag!]
+  orderItems: [OrderItem!]
+  productImages: [ProductImage!]
 }
 
 type CartItem {
@@ -55,7 +82,7 @@ type CartItem {
 type Cart {
   id: String!
   user: User!
-  items: [CartItem!]!
+  cartItems: [CartItem!]!
 }
 
 type User {
@@ -66,16 +93,34 @@ type User {
   isSeller: Boolean!
   createdAt: DateTime!
   updatedAt: DateTime!
+  deletedAt: DateTime!
   cart: Cart
+  orders: [Order!]
+}
+
+type PointTransaction {
+  id: String!
+  impUid: String!
+  status: POINT_TRANSACTION_STATUS_ENUM!
+  user: User!
+  createdAt: DateTime!
+}
+
+enum POINT_TRANSACTION_STATUS_ENUM {
+  PAYMENT
+  CANCEL
 }
 
 type Query {
-  fetchUser: String!
+  fetchUser: User!
+  fetchCart: Cart!
   fetchProduct(productId: String!): Product!
   fetchProducts: [Product!]!
   fetchProductTag(productTagId: String!): ProductTag!
   fetchProductTags: [ProductTag!]!
   fetchProductsByTag(productTagId: String!): [Product!]!
+  fetchOrder(orderId: String!): Order!
+  fetchOrders: [Order!]!
   fetchReview(reviewId: String!): Review!
   fetchReviews(productId: String!): [Review!]!
 }
@@ -83,18 +128,52 @@ type Query {
 type Mutation {
   login(email: String!, password: String!): String!
   restoreAccessToken: String!
-  createUser(email: String!, password: String!, name: String!, age: Int!): User!
+  logout: String!
+  createUser(createUserInput: CreateUserInput!): User!
+  updateUser(updateUserInput: UpdateUserInput!): User!
+  deleteUser: Boolean!
   createCart: Cart!
+  addProductToCart(addProductToCartInput: AddProductToCartInput!): Cart!
+  updateCartItem(updateCartInput: UpdateCartInput!): Cart!
+  deleteCart: Boolean!
+  deleteCartItem(productId: String!): Boolean!
   createProduct(createProductInput: CreateProductInput!): Product!
   updateProduct(productId: String!, updateProductInput: UpdateProductInput!): Product!
   deleteProduct(productId: String!): Boolean!
   addProductTag(productId: String!, productTagId: String!): Product!
   createProductTag(createProductTagInput: CreateProductTagInput!): ProductTag!
-  updateProductTag(producTagId: String!, updateProductTagInput: UpdateProductTagInput!): ProductTag!
+  updateProductTag(productTagId: String!, updateProductTagInput: UpdateProductTagInput!): ProductTag!
   deleteProductTag(productTagId: String!): Boolean!
+  createOrder(createOrderInput: CreateOrderInput!): Order!
+  deleteOrder(orderId: String!): Boolean!
+  createPointTransaction(impUid: String!): PointTransaction!
   createReview(productId: String!, createReviewInput: CreateReviewInput!): Review!
   deleteReview(reviewId: String!): Boolean!
   updateReview(reviewId: String!, updateReviewInput: UpdateReviewInput!): Review!
+}
+
+input CreateUserInput {
+  email: String!
+  password: String!
+  name: String!
+  age: Int!
+}
+
+input UpdateUserInput {
+  name: String
+  email: String
+  password: String
+  age: Int
+}
+
+input AddProductToCartInput {
+  productId: String!
+  quantity: Int! = 1
+}
+
+input UpdateCartInput {
+  productId: String!
+  quantity: Int!
 }
 
 input CreateProductInput {
@@ -102,8 +181,12 @@ input CreateProductInput {
   description: String!
   price: Int!
   isBook: Boolean!
+  productImages: [Upload!]
   bookProductInput: BookProductInput
 }
+
+"""The `Upload` scalar type represents a file upload."""
+scalar Upload
 
 input BookProductInput {
   author: String!
@@ -119,6 +202,7 @@ input UpdateProductInput {
   description: String
   price: Int
   isBook: Boolean
+  productImages: [Upload!]
   bookProductInput: BookProductInput
   stock: Int
 }
@@ -129,6 +213,15 @@ input CreateProductTagInput {
 
 input UpdateProductTagInput {
   name: String!
+}
+
+input CreateOrderInput {
+  orderItems: [OrderItemInput!]!
+}
+
+input OrderItemInput {
+  productId: String!
+  quantity: Int!
 }
 
 input CreateReviewInput {

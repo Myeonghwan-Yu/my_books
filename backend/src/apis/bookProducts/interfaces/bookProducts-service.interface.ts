@@ -5,5 +5,5 @@ export class IBookProductServiceCreate {
 }
 
 export class IBookProductServiceDelete {
-  id: string;
+  bookProductId: string;
 }
