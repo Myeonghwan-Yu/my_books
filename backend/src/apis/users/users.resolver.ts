@@ -15,7 +15,9 @@ export class UsersResolver {
 
   @UseGuards(GqlAuthGuard('access'))
   @Query(() => User)
-  async fetchUser(@Context() context: IContext): Promise<User> {
+  async fetchUser(
+    @Context() context: IContext, //
+  ): Promise<User> {
     const userId = context.req.user.id;
 
     const user = await this.usersService.findOneById({ userId });

@@ -6,6 +6,7 @@ import {
   IAuthServiceLogin,
   IAuthServiceRestoreAccessToken,
   IAuthServiceSetRefreshToken,
+  IAuthServiceSetRefreshTokenByRestAPI,
 } from './interfaces/auth-service.interface';
 import { JwtService } from '@nestjs/jwt';
 import { IContext } from 'src/commons/interfaces/context';
@@ -65,6 +66,21 @@ export class AuthService {
     context.res.setHeader(
       'set-Cookie',
       `refreshToken=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT;`,
+    );
+  }
+
+  setRefreshTokenByRestAPI({
+    user,
+    res,
+  }: IAuthServiceSetRefreshTokenByRestAPI): void {
+    const refreshToken = this.jwtService.sign(
+      { sub: user.id },
+      { secret: '나의리프레시비밀번호', expiresIn: '2w' },
+    );
+
+    res.setHeader(
+      'set-Cookie', //
+      `refreshToken=${refreshToken}; path=/;`,
     );
   }
 }

@@ -10,7 +10,7 @@ import { ProductTagsModule } from './apis/productTags/productTags.module';
 import { AuthModule } from './apis/auth/auth.module';
 import { CartsModule } from './apis/carts/carts.module';
 import { OrdersModule } from './apis/orders/orders.module';
-import { PaymentTransactionsModule } from './apis/paymentTransaction/pointsTransactions.module';
+import { PaymentTransactionsModule } from './apis/paymentTransaction/paymentTransactions.module';
 
 @Module({
   imports: [

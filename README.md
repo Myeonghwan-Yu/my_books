@@ -6,6 +6,7 @@
 jwt passport-jwt passport
 @google-cloud/storage graphql-upload @types/graphql-upload
 nodemailer
+crypto(내장) : 구글로그인 난수비밀번호 생성
 
 그 외 설정해준 부분들: 에러미들웨어, .env.docker, 도커야믈파일 경로설정,
 
