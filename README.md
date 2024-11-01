@@ -2,15 +2,14 @@
 
 프리티어 setting.json으로 사용
 
-설치한\패키지들: graphql, apollo-server @nestjs/config nestjs/typeorm typeorm mysql2 class-validator class-transformers
+설치한 패키지들: graphql, apollo-server @nestjs/config nestjs/typeorm typeorm mysql2 class-validator class-transformers
 jwt passport-jwt passport
 @google-cloud/storage graphql-upload @types/graphql-upload
 nodemailer
+axios
 crypto(내장) : 구글로그인 난수비밀번호 생성
 
 그 외 설정해준 부분들: 에러미들웨어, .env.docker, 도커야믈파일 경로설정,
-
-순환의존성 문제 해결요함
 
 체크할 내용들 :
 
@@ -56,3 +55,5 @@ ENV에 스트레티지 비밀번호 빼기
 마지막 테스트할시 프론트의 payment.html에서 axios 쿼리날릴때 주소 수정해주기
 
 오더, 페이먼트 트랜스액션 적용하기
+
+@@파일명에서 단수는 s빼기

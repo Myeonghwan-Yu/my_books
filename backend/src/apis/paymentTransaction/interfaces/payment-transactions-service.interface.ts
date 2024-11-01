@@ -8,9 +8,12 @@ export interface IPaymentTransactionsServiceCreate {
 
 export interface IPaymentTransactionsServiceFindOne {
   impUid: string;
-  userId: string;
 }
 
 export interface IPaymentTransactionsServiceFindAll {
   userId: string;
+}
+
+export interface IPaymentTransactionsServiceCheckDuplication {
+  impUid: string;
 }

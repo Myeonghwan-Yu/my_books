@@ -15,12 +15,14 @@ import {
   IUsersServiceUpdate,
 } from './interfaces/users-service.interface';
 import * as bcrypt from 'bcrypt';
+import { MailService } from './ mail.service';
 
 @Injectable({ scope: Scope.DEFAULT })
 export class UsersService {
   constructor(
     @InjectRepository(User)
     private readonly usersRepository: Repository<User>,
+    private readonly mailService: MailService,
   ) {}
 
   async findOneByEmail({ email }: IUsersServiceFindOneByEmail): Promise<User> {

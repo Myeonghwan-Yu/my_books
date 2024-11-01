@@ -11,12 +11,14 @@ import { AuthModule } from './apis/auth/auth.module';
 import { CartsModule } from './apis/carts/carts.module';
 import { OrdersModule } from './apis/orders/orders.module';
 import { PaymentTransactionsModule } from './apis/paymentTransaction/paymentTransactions.module';
+import { IamportService } from './apis/iamport/iamport.service';
 
 @Module({
   imports: [
     ConfigModule.forRoot(),
     AuthModule,
     CartsModule,
+    IamportService,
     OrdersModule,
     PaymentTransactionsModule,
     ProductsModule,

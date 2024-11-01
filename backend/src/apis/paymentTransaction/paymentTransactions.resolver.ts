@@ -11,17 +11,12 @@ export class PaymentTransactionsResolver {
     private readonly paymentTransactionsService: PaymentTransactionsService,
   ) {}
 
-  @UseGuards(GqlAuthGuard('access'))
   @Query(() => PaymentTransaction)
   async fetchPaymentTransaction(
     @Args('impUid') impUid: string,
-    @Context() context: IContext,
   ): Promise<PaymentTransaction> {
-    const userId = context.req.user.id;
-
     return this.paymentTransactionsService.findOne({
       impUid,
-      userId,
     });
   }
 
@@ -43,5 +38,15 @@ export class PaymentTransactionsResolver {
   ): Promise<PaymentTransaction> {
     const user = context.req.user;
     return this.paymentTransactionsService.create({ impUid, amount, user });
+  }
+
+  @UseGuards(GqlAuthGuard('access'))
+  @Mutation(() => PaymentTransaction)
+  async cancelPaymentTransaction(
+    @Args('impUid') impUid: string, //
+    @Context() context: IContext,
+  ) {
+    const user = context.req.user;
+    this.paymentTransactionsService.cancel({ impUid, user });
   }
 }
