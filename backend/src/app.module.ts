@@ -29,6 +29,10 @@ import { IamportService } from './apis/iamport/iamport.service';
       driver: ApolloDriver,
       autoSchemaFile: 'src/commons/graphql/schema.gql',
       context: ({ req, res }) => ({ req, res }),
+      formatError: (error) => {
+        console.log('에러 받음');
+        return error;
+      },
     }),
     TypeOrmModule.forRoot({
       type: process.env.DATABASE_TYPE as 'mysql',

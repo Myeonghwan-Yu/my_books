@@ -15,7 +15,7 @@ export class PaymentTransactionsResolver {
   async fetchPaymentTransaction(
     @Args('impUid') impUid: string,
   ): Promise<PaymentTransaction> {
-    return this.paymentTransactionsService.findOne({
+    return this.paymentTransactionsService.findOneByImpUid({
       impUid,
     });
   }
@@ -37,7 +37,11 @@ export class PaymentTransactionsResolver {
     @Context() context: IContext,
   ): Promise<PaymentTransaction> {
     const user = context.req.user;
-    return this.paymentTransactionsService.create({ impUid, amount, user });
+    return this.paymentTransactionsService.createForPayment({
+      impUid,
+      amount,
+      user,
+    });
   }
 
   @UseGuards(GqlAuthGuard('access'))
@@ -47,6 +51,6 @@ export class PaymentTransactionsResolver {
     @Context() context: IContext,
   ) {
     const user = context.req.user;
-    this.paymentTransactionsService.cancel({ impUid, user });
+    return this.paymentTransactionsService.cancel({ impUid, user });
   }
 }

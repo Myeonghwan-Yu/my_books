@@ -2,6 +2,7 @@ import {
   ConflictException,
   Injectable,
   NotFoundException,
+  UnprocessableEntityException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DataSource, Repository } from 'typeorm';
@@ -11,10 +12,12 @@ import {
 } from './entities/paymentTransaction.entity';
 import { UsersService } from '../users/users.service';
 import {
+  IPaymentTransactionsServiceCancel,
   IPaymentTransactionsServiceCheckDuplication,
   IPaymentTransactionsServiceCreate,
   IPaymentTransactionsServiceFindAll,
-  IPaymentTransactionsServiceFindOne,
+  IPaymentTransactionsServiceFindOneByImpUid,
+  IPaymentTransactionsServiceFindOneByImpUidAndUser,
 } from './interfaces/payment-transactions-service.interface';
 import { IamportService } from '../iamport/iamport.service';
 
@@ -28,9 +31,9 @@ export class PaymentTransactionsService {
     private readonly dataSource: DataSource,
   ) {}
 
-  async findOne({
+  async findOneByImpUid({
     impUid,
-  }: IPaymentTransactionsServiceFindOne): Promise<PaymentTransaction> {
+  }: IPaymentTransactionsServiceFindOneByImpUid): Promise<PaymentTransaction> {
     const transaction = await this.paymentTransactionsRepository.findOne({
       where: {
         impUid,
@@ -39,6 +42,26 @@ export class PaymentTransactionsService {
 
     if (!transaction) {
       throw new NotFoundException('해당 결제 거래를 찾을 수 없습니다.');
+    }
+
+    return transaction;
+  }
+
+  async findOneByImpUidAndUser({
+    impUid,
+    user,
+  }: IPaymentTransactionsServiceFindOneByImpUidAndUser): Promise<
+    PaymentTransaction[]
+  > {
+    const transaction = await this.paymentTransactionsRepository.find({
+      where: { impUid, user: { id: user.id } },
+      relations: ['user'],
+    });
+
+    if (!transaction) {
+      throw new NotFoundException(
+        '해당 아이디의 결제 거래를 찾을 수 없습니다.',
+      );
     }
 
     return transaction;
@@ -63,10 +86,8 @@ export class PaymentTransactionsService {
     impUid,
     amount,
     user: _user,
+    status = PAYMENT_TRANSACTION_STATUS_ENUM.PAYMENT,
   }: IPaymentTransactionsServiceCreate): Promise<PaymentTransaction> {
-    await this.iamportService.checkPaid({ impUid, amount });
-    await this.checkDuplication({ impUid });
-
     const queryRunner = this.dataSource.createQueryRunner();
 
     await queryRunner.connect();
@@ -77,7 +98,7 @@ export class PaymentTransactionsService {
         impUid,
         amount,
         user: _user,
-        status: PAYMENT_TRANSACTION_STATUS_ENUM.PAYMENT,
+        status,
       });
 
       await queryRunner.manager.save(paymentTransaction);
@@ -101,28 +122,93 @@ export class PaymentTransactionsService {
       return paymentTransaction;
     } catch (error) {
       await queryRunner.rollbackTransaction();
-
       throw error;
     } finally {
       await queryRunner.release();
     }
   }
 
+  async createForPayment({
+    impUid,
+    amount,
+    user,
+    status,
+  }: IPaymentTransactionsServiceCreate): Promise<PaymentTransaction> {
+    await this.iamportService.checkPaid({ impUid, amount });
+    await this.checkDuplication({ impUid });
+
+    return await this.create({ impUid, amount, user, status });
+  }
+
   async checkDuplication({
     impUid,
   }: IPaymentTransactionsServiceCheckDuplication): Promise<void> {
-    const result = await this.findOne({ impUid });
+    const result = await this.findOneByImpUid({ impUid });
     if (result) {
       throw new ConflictException('이미 등록된 결제아이디입니다.');
     }
   }
 
-  // cancel({ impUid, user }) {
-  //   // 1. 이미 취소된 결제인지 확인하기
-  //   this.findOne({ impuid });
-  //   // 2. 포인트 적립된 2% 회수하기
-  //   // 3. 결제 취소하기
-  //   const canceldAmount = this.iamportService.cancel({ impUid });
-  //   // 4. 취소된 결과 DB에 등록하기
-  // }
+  // 트랜잭션필요할듯..
+  async cancel({
+    impUid,
+    user,
+  }: IPaymentTransactionsServiceCancel): Promise<PaymentTransaction> {
+    const queryRunner = this.dataSource.createQueryRunner();
+
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
+
+    try {
+      const paymentTransactions = await this.findOneByImpUidAndUser({
+        impUid,
+        user,
+      });
+
+      const canceledPaymentTransactions = paymentTransactions.filter(
+        (el) => el.status === PAYMENT_TRANSACTION_STATUS_ENUM.CANCEL,
+      );
+
+      if (canceledPaymentTransactions.length > 0) {
+        throw new ConflictException('이미 취소된 결제아이디입니다');
+      }
+
+      const paidPaymentTransactions = paymentTransactions.filter(
+        (el) => el.status === PAYMENT_TRANSACTION_STATUS_ENUM.PAYMENT,
+      );
+
+      if (paidPaymentTransactions.length === 0) {
+        throw new UnprocessableEntityException(
+          '결제 기록이 존재하지 않습니다.',
+        );
+      }
+
+      // 포인트 부족하면 에러처리하는데, 고민해봐야함.
+      if (
+        paidPaymentTransactions[0].user.point <
+        Math.floor(paidPaymentTransactions[0].amount * 0.02)
+      ) {
+        throw new ConflictException('회수할 포인트가 부족합니다.');
+      }
+
+      const canceledAmount = await this.iamportService.cancel({ impUid });
+
+      const transaction = await this.create({
+        impUid,
+        amount: -canceledAmount,
+        user,
+        status: PAYMENT_TRANSACTION_STATUS_ENUM.CANCEL,
+      });
+
+      await queryRunner.manager.save(transaction);
+
+      await queryRunner.commitTransaction();
+      return transaction;
+    } catch (error) {
+      await queryRunner.rollbackTransaction();
+      throw error;
+    } finally {
+      await queryRunner.release();
+    }
+  }
 }
