@@ -87,6 +87,6 @@ export class UsersService {
       { deletedAt: new Date() },
     );
 
-    return result.affected ? true : false;
+    return result.affected > 0;
   }
 }

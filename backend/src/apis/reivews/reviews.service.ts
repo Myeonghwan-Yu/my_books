@@ -58,10 +58,11 @@ export class ReviewsService {
     const review = await this.findOne({ reviewId });
 
     if (!review) {
-      throw new NotFoundException('리뷰를 찾을 수 없습니다.');
+      throw new NotFoundException('해당 리뷰를 찾을 수 없습니다.');
     }
-    await this.reviewsRepository.delete({ id: reviewId });
-    return true;
+
+    const result = await this.reviewsRepository.delete({ id: reviewId });
+    return result.affected > 0;
   }
 
   async update({

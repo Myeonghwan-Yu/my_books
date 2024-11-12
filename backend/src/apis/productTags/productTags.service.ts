@@ -43,7 +43,7 @@ export class ProductTagsService {
   }: IProductTagsServiceUpdate): Promise<ProductTag> {
     const productTag = await this.findOne({ productTagId });
 
-    if (!productTagId) {
+    if (!productTag) {
       throw new NotFoundException('태그를 찾을 수 없습니다.');
     }
 
@@ -59,11 +59,14 @@ export class ProductTagsService {
     const productTag = await this.findOne({ productTagId });
 
     if (!productTag) {
-      throw new NotFoundException('태그를 찾을 수 없습니다.');
+      throw new NotFoundException('해당 태그를 찾을 수 없습니다.');
     }
 
-    await this.productTagsRepository.delete({ id: productTagId });
-    return true;
+    const result = await this.productTagsRepository.delete({
+      id: productTagId,
+    });
+
+    return result.affected > 0;
   }
 
   async findProductsByTag({

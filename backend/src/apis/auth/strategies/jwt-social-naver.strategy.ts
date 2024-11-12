@@ -1,14 +1,14 @@
 import { PassportStrategy } from '@nestjs/passport';
 import { randomBytes } from 'crypto';
-import { Profile, Strategy } from 'passport-google-oauth20';
+import { Strategy, Profile } from 'passport-naver-v2';
 
-export class JwtGoogleStrategy extends PassportStrategy(Strategy, 'google') {
+export class JwtNaverStrategy extends PassportStrategy(Strategy, 'naver') {
   constructor() {
     super({
-      clientId: process.env.GOOGLE_CLIENT_ID,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-      callbackURL: 'http://localhost:3000/login/google',
-      scope: ['email', 'profile'],
+      clientId: process.env.NAVER_CLIENT_ID,
+      clientSecret: process.env.NAVER_CLIENT_SECRET,
+      callbackURL: 'http://localhost:3000/login/naver',
+      scope: ['email', 'name'],
     });
   }
 
@@ -20,8 +20,8 @@ export class JwtGoogleStrategy extends PassportStrategy(Strategy, 'google') {
     const generatedPassword = randomBytes(16).toString('hex');
 
     return {
-      name: profile.displayName,
-      email: profile.emails[0].value,
+      name: profile.name,
+      email: profile.email,
       password: generatedPassword,
       age: 0,
     };

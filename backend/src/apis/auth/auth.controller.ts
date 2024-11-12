@@ -1,48 +1,19 @@
 import { Controller, Get, Req, Res, UseGuards } from '@nestjs/common';
-import { AuthGuard } from '@nestjs/passport';
-import { UsersService } from '../users/users.service';
 import { AuthService } from './auth.service';
+import { DynamicAuthGuard } from './guards/dynamic-auth.guard';
 import { Request, Response } from 'express';
-
-interface IOAuthUser {
-  user: {
-    name: string;
-    email: string;
-    password: string;
-    age: number;
-  };
-}
+import { IOAuthUser } from 'src/commons/interfaces/context';
 
 @Controller()
 export class AuthController {
-  constructor(
-    private readonly usersService: UsersService, //
-    private readonly authService: AuthService,
-  ) {}
+  constructor(private readonly authService: AuthService) {}
 
-  @UseGuards(AuthGuard('google'))
-  @Get('/login/google')
-  async loginGoogle(
+  @Get('/login/:social')
+  @UseGuards(DynamicAuthGuard)
+  async loginOAuth(
     @Req() req: Request & IOAuthUser, //
     @Res() res: Response,
   ) {
-    let user = await this.usersService.findOneByEmail({
-      email: req.user.email,
-    });
-
-    if (!user) {
-      user = await this.usersService.create({
-        createUserInput: {
-          email: req.user.email,
-          password: req.user.password,
-          name: req.user.name,
-          age: 0,
-        },
-      });
-
-      this.authService.setRefreshTokenByRestAPI({ user, res });
-
-      res.redirect('http://localhost:5500/frontend/social-login.html');
-    }
+    return this.authService.loginOAuth({ req, res });
   }
 }

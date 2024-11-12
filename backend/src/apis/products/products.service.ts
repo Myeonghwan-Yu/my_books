@@ -90,21 +90,22 @@ export class ProductsService {
   async delete({ productId }: IProductsServiceDelete): Promise<boolean> {
     const product = await this.findOne({ productId });
 
-    if (product) {
-      if (product.bookProduct) {
-        const result = await this.bookProductsService.delete({
-          bookProductId: product.bookProduct.id,
-        });
-
-        if (!result) {
-          return false;
-        }
-      }
-      const result2 = await this.productsRepository.delete({ id: productId });
-      return result2.affected ? true : false;
+    if (!product) {
+      throw new NotFoundException('해당 상품을 찾을 수 없습니다.');
     }
 
-    return false;
+    if (product.bookProduct) {
+      const result = await this.bookProductsService.delete({
+        bookProductId: product.bookProduct.id,
+      });
+
+      if (!result) {
+        throw new NotFoundException('책 상품 정보를 찾을 수 없습니다.');
+      }
+    }
+
+    const result = await this.productsRepository.delete({ id: productId });
+    return result.affected > 0;
   }
 
   async addProductTag({

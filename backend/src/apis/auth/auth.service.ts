@@ -4,6 +4,7 @@ import * as bcrypt from 'bcrypt';
 import {
   IAuthServiceGetAccessToken,
   IAuthServiceLogin,
+  IAuthServiceLoginOAuth,
   IAuthServiceRestoreAccessToken,
   IAuthServiceSetRefreshToken,
   IAuthServiceSetRefreshTokenByRestAPI,
@@ -39,10 +40,30 @@ export class AuthService {
     return this.getAccessToken({ user });
   }
 
+  async loginOAuth({ req, res }: IAuthServiceLoginOAuth) {
+    let user = await this.usersService.findOneByEmail({
+      email: req.user.email,
+    });
+
+    if (!user) {
+      user = await this.usersService.create({
+        createUserInput: {
+          email: req.user.email,
+          password: req.user.password,
+          name: req.user.name,
+          age: 0,
+        },
+      });
+      this.setRefreshTokenByRestAPI({ user, res });
+    }
+
+    res.redirect('http://localhost:5500/frontend/social-login.html');
+  }
+
   setRefreshToken({ user, context }: IAuthServiceSetRefreshToken): void {
     const refreshToken = this.jwtService.sign(
       { sub: user.id },
-      { secret: '나의리프레시비밀번호', expiresIn: '2w' },
+      { secret: '리프레시비밀번호', expiresIn: '2w' },
     );
 
     context.res.setHeader(
@@ -54,7 +75,7 @@ export class AuthService {
   getAccessToken({ user }: IAuthServiceGetAccessToken): string {
     return this.jwtService.sign(
       { sub: user.id },
-      { secret: '나의비밀번호', expiresIn: '1h' },
+      { secret: '엑세스비밀번호', expiresIn: '1h' },
     );
   }
 
@@ -62,11 +83,13 @@ export class AuthService {
     return this.getAccessToken({ user });
   }
 
-  logOut(context: IContext): void {
+  logOut(context: IContext): string {
     context.res.setHeader(
       'set-Cookie',
       `refreshToken=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT;`,
     );
+
+    return '로그아웃 되었습니다.';
   }
 
   setRefreshTokenByRestAPI({
@@ -75,7 +98,7 @@ export class AuthService {
   }: IAuthServiceSetRefreshTokenByRestAPI): void {
     const refreshToken = this.jwtService.sign(
       { sub: user.id },
-      { secret: '나의리프레시비밀번호', expiresIn: '2w' },
+      { secret: '리프레시비밀번호', expiresIn: '2w' },
     );
 
     res.setHeader(

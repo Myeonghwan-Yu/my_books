@@ -12,7 +12,7 @@ export class CustomExceptionFilter implements ExceptionFilter {
   catch(exception: unknown) {
     const error = {
       status: HttpStatus.INTERNAL_SERVER_ERROR,
-      message: '에외가 발생했습니다.',
+      message: '예외가 발생했습니다.',
     };
 
     if (exception instanceof HttpException) {
@@ -24,7 +24,6 @@ export class CustomExceptionFilter implements ExceptionFilter {
       error.message = exception.response.data.message;
     }
 
-    console.log('에러 전송');
     throw new ApolloError(error.message, error.status.toString());
   }
 }

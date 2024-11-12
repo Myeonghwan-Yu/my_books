@@ -1,6 +1,10 @@
-import { Response } from 'express';
+import { Request, Response } from 'express';
 import { User } from 'src/apis/users/entities/user.entity';
-import { IAuthUser, IContext } from 'src/commons/interfaces/context';
+import {
+  IAuthUser,
+  IContext,
+  IOAuthUser,
+} from 'src/commons/interfaces/context';
 
 export interface IAuthServiceLogin {
   email: string;
@@ -8,13 +12,13 @@ export interface IAuthServiceLogin {
   context: IContext;
 }
 
-export interface IAuthServiceGetAccessToken {
-  user: User | IAuthUser['user'];
+export interface IAuthServiceLoginOAuth {
+  req: Request & IOAuthUser;
+  res: Response;
 }
 
-export interface IAuthServiceSetRefreshToken {
-  user: User;
-  context: IContext;
+export interface IAuthServiceGetAccessToken {
+  user: User | IAuthUser['user'];
 }
 
 export interface IAuthServiceSetRefreshToken {

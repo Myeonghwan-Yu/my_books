@@ -28,7 +28,6 @@ export class AuthResolver {
   @Mutation(() => String)
   @UseGuards(GqlAuthGuard('access'))
   logout(@Context() context: IContext): string {
-    this.authService.logOut(context);
-    return '로그아웃되었습니다.';
+    return this.authService.logOut(context);
   }
 }

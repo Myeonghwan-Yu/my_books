@@ -149,7 +149,6 @@ export class PaymentTransactionsService {
     }
   }
 
-  // 트랜잭션필요할듯..
   async cancel({
     impUid,
     user,

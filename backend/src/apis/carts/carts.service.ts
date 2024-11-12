@@ -154,9 +154,9 @@ export class CartsService {
       throw new NotFoundException('해당 유저의 카트를 찾을 수 없습니다.');
     }
 
-    await this.cartsRepository.delete({ id: cart.id });
+    const result = await this.cartsRepository.delete({ id: cart.id });
 
-    return true;
+    return result.affected > 0;
   }
 
   async deleteCartItem({
@@ -180,8 +180,10 @@ export class CartsService {
       throw new NotFoundException('해당 상품이 카트에 존재하지 않습니다.');
     }
 
-    await this.cartItemsService.delete({ cartItemId: cartItem.id });
+    const result = await this.cartItemsService.delete({
+      cartItemId: cartItem.id,
+    });
 
-    return true;
+    return result;
   }
 }

@@ -30,7 +30,6 @@ import { IamportService } from './apis/iamport/iamport.service';
       autoSchemaFile: 'src/commons/graphql/schema.gql',
       context: ({ req, res }) => ({ req, res }),
       formatError: (error) => {
-        console.log('에러 받음');
         return error;
       },
     }),

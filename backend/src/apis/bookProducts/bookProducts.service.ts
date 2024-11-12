@@ -24,6 +24,7 @@ export class BookProductsService {
     const result = await this.bookProductsRepository.delete({
       id: bookProductId,
     });
-    return result.affected && result.affected > 0;
+
+    return result.affected > 0;
   }
 }
