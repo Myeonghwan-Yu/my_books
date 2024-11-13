@@ -4,7 +4,7 @@
 app.module에서 gql, typeorm, config 모듈 사용
 main.ts에서 파이프, 익셉션필터, 파일업로드 사용
 
-설치한 패키지들: graphql, apollo-server @nestjs/config nestjs/typeorm typeorm mysql2 class-validator class-transformers
+설치한 패키지들: graphql, apollo-server @nestjs/config nestjs/typeorm typeorm mysql2 class-validator class-transformers @nestjs/microservices
 passport passport-jwt passport-google-oauth20 passport-naver-v2 passport-kakao
 @google-cloud/storage graphql-upload @types/graphql-upload
 nodemailer
@@ -17,27 +17,22 @@ crypto(내장) : 구글로그인 난수비밀번호 생성
 @@@@@@체크할 내용들@@@@@@@
 ////////
 
-try catch 있는거 지우자..
-페이먼트서비스 부분에서 포인트 환불부분 로직생각해보기
-프로덕트 중복 거를방법 생각해보기
 프로덕트 삭제할때 이미지파일도 같이삭제하기
-로그인오어스 에러수정하기
 노드메일러구현하기
-오더 트랜스액션 적용하기
+오더 트랜스액션 적용하기, 오더랑 페이먼트트랜즈액션 연결하기
+리뷰 아이디 있어야 작성할수있게하기
+내가 작성한 리뷰 찾기 뭐 이런것도 나중에해보기
 
 로그인 배포환경에서는 https설정필요
-
-리뷰 아이디 있어야 작성할수있게하기
-내가 작성한 리뷰 찾기 뭐 이런것도 나중에해보자
-
 프로덕트이미지 업데이트는 프로덕트부분에서 아직 안했음.
-
 마지막 테스트할시 프론트의 payment.html에서 axios 쿼리날릴때 주소 수정해주기
 
 // 추후에 해결할 내용들
 
 에러코드 잘설정해주자.. 그냥 httpexception으로 퉁치는게 안전하지만 지금 적용할 필요는 없어보임.
 나중에 배포코드에서는 분리해도 좋을듯.
+
+페이먼트서비스 부분에서 포인트 환불부분 로직생각해보기 << 포인트를 2주뒤에 적립하게해서, 아직 구현이 어렵다. 포인트 환불로직만 구현했음.
 
 앞으로 함수하나당 파일 하나로 분리하기..? 추후에..
 
@@ -49,3 +44,4 @@ try catch 있는거 지우자..
 
 softDelete 언제 적용할지 고민해봤음.. 거래내역에만 하는게 좋을듯하여 상품 삭제에서는 적용하지않음. (완료. 추가로 결제API 삭제에다가 적용)
 페이먼트 트랜스액션 적용하기
+프로덕트 중복 거를방법 생각해봤는데, 책은 ISBN으로 중복처리하고, 상품은 중복 안하고 대신 브랜드명을 넣는 것으로 사용하려함.

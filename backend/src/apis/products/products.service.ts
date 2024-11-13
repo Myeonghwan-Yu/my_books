@@ -51,9 +51,15 @@ export class ProductsService {
     let bookProduct = null;
 
     if (isBook && bookProductInput) {
-      bookProduct = await this.bookProductsService.create({
-        bookProductInput,
+      const existingBook = await this.bookProductsService.findOne({
+        isbn: bookProductInput.isbn,
       });
+
+      if (existingBook) {
+        throw new ConflictException('이미 존재하는 ISBN입니다.');
+      }
+
+      bookProduct = await this.bookProductsService.create({ bookProductInput });
     }
 
     let uploadedImages = [];

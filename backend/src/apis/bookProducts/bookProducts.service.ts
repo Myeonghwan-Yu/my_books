@@ -5,6 +5,7 @@ import { BookProduct } from './entitites/bookproduct.entity';
 import {
   IBookProductServiceCreate,
   IBookProductServiceDelete,
+  IBookProductServiceFindOne,
 } from './interfaces/bookProducts-service.interface';
 
 @Injectable()
@@ -13,6 +14,14 @@ export class BookProductsService {
     @InjectRepository(BookProduct)
     private readonly bookProductsRepository: Repository<BookProduct>,
   ) {}
+
+  async findOne({
+    isbn,
+  }: IBookProductServiceFindOne): Promise<BookProduct | null> {
+    return this.bookProductsRepository.findOne({
+      where: { isbn },
+    });
+  }
 
   async create({
     bookProductInput,

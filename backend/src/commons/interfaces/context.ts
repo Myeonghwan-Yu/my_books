@@ -6,11 +6,6 @@ export interface IAuthUser {
   };
 }
 
-export interface IContext {
-  req: Request & IAuthUser;
-  res: Response;
-}
-
 export interface IOAuthUser {
   user: {
     name: string;
@@ -18,4 +13,9 @@ export interface IOAuthUser {
     password: string;
     age: number;
   };
+}
+
+export interface IContext {
+  req: Request & IAuthUser;
+  res: Response;
 }

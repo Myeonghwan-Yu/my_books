@@ -7,3 +7,7 @@ export class IBookProductServiceCreate {
 export class IBookProductServiceDelete {
   bookProductId: string;
 }
+
+export class IBookProductServiceFindOne {
+  isbn: string;
+}
