@@ -10,6 +10,7 @@ import {
 } from 'typeorm';
 import { Cart } from 'src/apis/carts/entities/cart.entity';
 import { Order } from 'src/apis/orders/entities/order.entity';
+import { Review } from 'src/apis/reviews/entities/review.entity';
 
 @ObjectType()
 @Entity()
@@ -60,4 +61,8 @@ export class User {
   @OneToMany(() => Order, (order) => order.user)
   @Field(() => [Order], { nullable: true })
   orders: Order[];
+
+  @Field(() => [Review])
+  @OneToMany(() => Review, (review) => review.user)
+  reviews: Review[];
 }

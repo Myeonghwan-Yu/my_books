@@ -1,8 +1,23 @@
 import { CreateReviewInput } from '../dto/create-review.input';
 import { UpdateReviewInput } from '../dto/update-review.input';
 
+export class IReviewsServiceFindOne {
+  reviewId: string;
+}
+
+export class IReviewsServiceFindAllByProductId {
+  productId: string;
+}
+
+export class IReviewsServiceFindAllByUserId {
+  userId: string;
+}
+
+export class IReviewsService {}
+
 export class IReviewsServiceCreate {
   productId: string;
+  userId: string;
   createReviewInput: CreateReviewInput;
 }
 
@@ -12,13 +27,6 @@ export class IReviewsServiceUpdate {
 }
 
 export class IReviewsServiceDelete {
+  userId: string;
   reviewId: string;
-}
-
-export class IReviewsServiceFindOne {
-  reviewId: string;
-}
-
-export class IReviewsServiceFindAll {
-  productId: string;
 }

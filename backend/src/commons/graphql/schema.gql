@@ -90,6 +90,7 @@ type User {
   name: String!
   email: String!
   age: Int!
+  point: Int!
   isSeller: Boolean!
   createdAt: DateTime!
   updatedAt: DateTime!
@@ -98,9 +99,10 @@ type User {
   orders: [Order!]
 }
 
-type PointTransaction {
+type PaymentTransaction {
   id: String!
   impUid: String!
+  amount: Int!
   status: POINT_TRANSACTION_STATUS_ENUM!
   user: User!
   createdAt: DateTime!
@@ -121,6 +123,8 @@ type Query {
   fetchProductsByTag(productTagId: String!): [Product!]!
   fetchOrder(orderId: String!): Order!
   fetchOrders: [Order!]!
+  fetchPaymentTransaction(impUid: String!): PaymentTransaction!
+  fetchPaymentTransactions: [PaymentTransaction!]!
   fetchReview(reviewId: String!): Review!
   fetchReviews(productId: String!): [Review!]!
 }
@@ -146,7 +150,8 @@ type Mutation {
   deleteProductTag(productTagId: String!): Boolean!
   createOrder(createOrderInput: CreateOrderInput!): Order!
   deleteOrder(orderId: String!): Boolean!
-  createPointTransaction(impUid: String!): PointTransaction!
+  createPaymentTransaction(impUid: String!, amount: Int!): PaymentTransaction!
+  cancelPaymentTransaction(impUid: String!): PaymentTransaction!
   createReview(productId: String!, createReviewInput: CreateReviewInput!): Review!
   deleteReview(reviewId: String!): Boolean!
   updateReview(reviewId: String!, updateReviewInput: UpdateReviewInput!): Review!
@@ -164,6 +169,7 @@ input UpdateUserInput {
   email: String
   password: String
   age: Int
+  point: Int
 }
 
 input AddProductToCartInput {

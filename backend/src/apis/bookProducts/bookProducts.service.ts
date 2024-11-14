@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
-import { BookProduct } from './entitites/bookproduct.entity';
+import { BookProduct } from './entities/bookproduct.entity';
 import {
   IBookProductServiceCreate,
   IBookProductServiceDelete,

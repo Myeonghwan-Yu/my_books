@@ -5,7 +5,7 @@ import { ProductsResolver } from './products.resolver';
 import { Product } from './entities/product.entity';
 import { BookProductsService } from '../bookProducts/bookProducts.service';
 import { ProductTagsModule } from '../productTags/productTags.module';
-import { BookProduct } from '../bookProducts/entitites/bookproduct.entity';
+import { BookProduct } from '../bookProducts/entities/bookproduct.entity';
 import { ProductImagesService } from '../productImages/productImages.service';
 
 @Module({

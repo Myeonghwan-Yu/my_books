@@ -12,8 +12,8 @@ import {
 } from 'typeorm';
 import { ObjectType, Field, Int } from '@nestjs/graphql';
 import { Min } from 'class-validator';
-import { BookProduct } from 'src/apis/bookProducts/entitites/bookproduct.entity';
-import { Review } from 'src/apis/reivews/entities/review.entity';
+import { BookProduct } from 'src/apis/bookProducts/entities/bookproduct.entity';
+import { Review } from 'src/apis/reviews/entities/review.entity';
 import { ProductTag } from 'src/apis/productTags/entities/productTag.entity';
 import { ProductImage } from 'src/apis/productImages/entities/productImage.entity';
 import { OrderItem } from 'src/apis/orderItems/entities/orderItem.entity';

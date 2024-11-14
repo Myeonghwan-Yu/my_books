@@ -3,7 +3,6 @@ import { UsersResolver } from './users.resolver';
 import { UsersService } from './users.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
-import { MailService } from './ mail.service';
 
 @Module({
   imports: [
@@ -14,7 +13,6 @@ import { MailService } from './ mail.service';
   providers: [
     UsersResolver, //
     UsersService,
-    MailService,
   ],
 
   exports: [

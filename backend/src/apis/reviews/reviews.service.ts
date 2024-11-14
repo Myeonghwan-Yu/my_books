@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Review } from './entities/review.entity';
@@ -6,10 +10,12 @@ import { ProductsService } from '../products/products.service';
 import {
   IReviewsServiceCreate,
   IReviewsServiceDelete,
-  IReviewsServiceFindAll,
+  IReviewsServiceFindAllByProductId,
+  IReviewsServiceFindAllByUserId,
   IReviewsServiceFindOne,
   IReviewsServiceUpdate,
 } from './interfaces/reviews-service.interface';
+import { UsersService } from '../users/users.service';
 
 @Injectable()
 export class ReviewsService {
@@ -17,11 +23,13 @@ export class ReviewsService {
     @InjectRepository(Review)
     private readonly reviewsRepository: Repository<Review>,
     private readonly productsService: ProductsService,
+    private readonly usersService: UsersService,
   ) {}
 
   async findOne({ reviewId }: IReviewsServiceFindOne): Promise<Review> {
     const review = await this.reviewsRepository.findOne({
       where: { id: reviewId },
+      relations: ['user'], // 'user' 관계를 함께 로드
     });
 
     if (!review) {
@@ -31,7 +39,15 @@ export class ReviewsService {
     return review;
   }
 
-  async findAll({ productId }: IReviewsServiceFindAll): Promise<Review[]> {
+  async findAllByUserId({ userId }: IReviewsServiceFindAllByUserId) {
+    return await this.reviewsRepository.find({
+      where: { user: { id: userId } },
+    });
+  }
+
+  async findAllByProductId({
+    productId,
+  }: IReviewsServiceFindAllByProductId): Promise<Review[]> {
     return await this.reviewsRepository.find({
       where: { product: { id: productId } },
     });
@@ -39,29 +55,48 @@ export class ReviewsService {
 
   async create({
     productId,
+    userId,
     createReviewInput,
   }: IReviewsServiceCreate): Promise<Review> {
     const product = await this.productsService.findOne({ productId });
 
     if (!product) {
-      throw new Error('해당 상품이 존재하지 않습니다.');
+      throw new NotFoundException('해당 상품이 존재하지 않습니다.');
     }
+
+    const user = await this.usersService.findOneById({ userId });
+
+    if (!user) {
+      throw new NotFoundException('해당 유저가 존재하지 않습니다.');
+    }
+
     const review = this.reviewsRepository.create({
       ...createReviewInput,
       product,
+      user,
     });
 
     return this.reviewsRepository.save(review);
   }
 
-  async delete({ reviewId }: IReviewsServiceDelete): Promise<boolean> {
+  async delete({ userId, reviewId }: IReviewsServiceDelete): Promise<boolean> {
+    const user = await this.usersService.findOneById({ userId });
+    if (!user) {
+      throw new NotFoundException('해당 유저를 찾을 수 없습니다.');
+    }
+
     const review = await this.findOne({ reviewId });
 
     if (!review) {
       throw new NotFoundException('해당 리뷰를 찾을 수 없습니다.');
     }
 
+    if (review.user.id !== userId) {
+      throw new ForbiddenException('이 리뷰를 삭제할 권한이 없습니다.');
+    }
+
     const result = await this.reviewsRepository.delete({ id: reviewId });
+
     return result.affected > 0;
   }
 
