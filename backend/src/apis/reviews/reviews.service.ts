@@ -29,7 +29,7 @@ export class ReviewsService {
   async findOne({ reviewId }: IReviewsServiceFindOne): Promise<Review> {
     const review = await this.reviewsRepository.findOne({
       where: { id: reviewId },
-      relations: ['user'], // 'user' 관계를 함께 로드
+      relations: ['user', 'product'],
     });
 
     if (!review) {
