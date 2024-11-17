@@ -26,7 +26,9 @@ export class ReviewsService {
     private readonly usersService: UsersService,
   ) {}
 
-  async findOne({ reviewId }: IReviewsServiceFindOne): Promise<Review> {
+  async findOneByReviewId({
+    reviewId,
+  }: IReviewsServiceFindOne): Promise<Review> {
     const review = await this.reviewsRepository.findOne({
       where: { id: reviewId },
       relations: ['user', 'product'],
@@ -85,7 +87,7 @@ export class ReviewsService {
       throw new NotFoundException('해당 유저를 찾을 수 없습니다.');
     }
 
-    const review = await this.findOne({ reviewId });
+    const review = await this.findOneByReviewId({ reviewId });
 
     if (!review) {
       throw new NotFoundException('해당 리뷰를 찾을 수 없습니다.');
@@ -104,7 +106,7 @@ export class ReviewsService {
     reviewId,
     updateReviewInput,
   }: IReviewsServiceUpdate): Promise<Review> {
-    const review = await this.findOne({ reviewId });
+    const review = await this.findOneByReviewId({ reviewId });
 
     if (!review) {
       throw new NotFoundException('리뷰를 찾을 수 없습니다.');

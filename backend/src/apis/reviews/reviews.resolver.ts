@@ -15,7 +15,7 @@ export class ReviewsResolver {
 
   @Query(() => Review)
   async fetchReviewsByReviewId(@Args('reviewId') reviewId: string) {
-    return this.reviewsService.findOne({ reviewId });
+    return this.reviewsService.findOneByReviewId({ reviewId });
   }
 
   @UseGuards(GqlAuthGuard('access'))
