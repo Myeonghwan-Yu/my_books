@@ -5,8 +5,12 @@ export class IProductTagsServiceCreate {
   createProductTagInput: CreateProductTagInput;
 }
 
-export class IProductTagsServiceFindOne {
+export class IProductTagsServiceFindOneById {
   productTagId: string;
+}
+
+export class IProductTagsServiceFindOneByName {
+  productTagName: string;
 }
 
 export class IProductTagsServiceUpdate {

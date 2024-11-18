@@ -5,7 +5,7 @@ services:
     image: asia.gcr.io/backend-431315/my-backend-project-nestjs:0.2
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.prod
     # ports:
     #   - 3000:3000
     # env_file:

@@ -1,11 +1,9 @@
 import { Resolver, Mutation, Args, Query } from '@nestjs/graphql'; // 필요한 데코레이터 임포트
 import { ProductTag } from './entities/productTag.entity';
 import { ProductTagsService } from './productTags.service';
-import {
-  CreateProductTagInput,
-  UpdateProductTagInput,
-} from './dto/create-productTag.input';
+import { CreateProductTagInput } from './dto/create-productTag.input';
 import { Product } from '../products/entities/product.entity';
+import { UpdateProductTagInput } from './dto/update-productTag.input';
 
 @Resolver()
 export class ProductTagsResolver {
@@ -14,8 +12,8 @@ export class ProductTagsResolver {
   ) {}
 
   @Query(() => ProductTag)
-  async fetchProductTag(@Args('productTagId') productTagId: string) {
-    return this.productTagsService.findOne({ productTagId });
+  async fetchProductTagById(@Args('productTagId') productTagId: string) {
+    return this.productTagsService.findOneById({ productTagId });
   }
 
   @Query(() => [ProductTag])

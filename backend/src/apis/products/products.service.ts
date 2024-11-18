@@ -119,7 +119,9 @@ export class ProductsService {
     productTagId,
   }: IProductsServiceAddProductTag): Promise<Product> {
     const product = await this.findOne({ productId });
-    const productTag = await this.productTagsService.findOne({ productTagId });
+    const productTag = await this.productTagsService.findOneById({
+      productTagId,
+    });
 
     if (!product || !productTag) {
       throw new NotFoundException('상품이나 태그가 존재하지 않습니다');
