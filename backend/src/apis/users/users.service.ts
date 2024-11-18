@@ -1,5 +1,6 @@
 import {
   ConflictException,
+  ForbiddenException,
   Injectable,
   NotFoundException,
   Scope,
@@ -23,12 +24,20 @@ export class UsersService {
     private readonly usersRepository: Repository<User>,
   ) {}
 
-  async findOneByEmail({ email }: IUsersServiceFindOneByEmail): Promise<User> {
-    return this.usersRepository.findOne({ where: { email } });
+  async findOneById({ userId }: IUsersServiceFindOneById): Promise<User> {
+    const user = await this.usersRepository.findOne({
+      where: { id: userId },
+    });
+
+    return user;
   }
 
-  async findOneById({ userId }: IUsersServiceFindOneById): Promise<User> {
-    return this.usersRepository.findOne({ where: { id: userId } });
+  async findOneByEmail({ email }: IUsersServiceFindOneByEmail): Promise<User> {
+    const user = await this.usersRepository.findOne({
+      where: { email },
+    });
+
+    return user;
   }
 
   async create({ createUserInput }: IUsersServiceCreate): Promise<User> {
@@ -37,6 +46,10 @@ export class UsersService {
     const existingUser = await this.findOneByEmail({ email });
     if (existingUser) {
       throw new ConflictException('이미 등록된 이메일입니다.');
+    }
+
+    if (existingUser.deletedAt !== null) {
+      throw new ForbiddenException('이미 삭제된 이용자입니다.');
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -58,7 +71,11 @@ export class UsersService {
     const user = await this.findOneById({ userId });
 
     if (!user) {
-      throw new NotFoundException('해당 유저를 찾을 수 없습니다.');
+      throw new NotFoundException('사용자를 찾을 수 없습니다.');
+    }
+
+    if (user.deletedAt !== null) {
+      throw new ForbiddenException('이미 삭제된 사용자입니다.');
     }
 
     const updatedUser = this.usersRepository.create({
@@ -77,7 +94,11 @@ export class UsersService {
     const user = await this.findOneById({ userId });
 
     if (!user) {
-      throw new NotFoundException('해당 유저를 찾을 수 없습니다.');
+      throw new NotFoundException('사용자를 찾을 수 없습니다.');
+    }
+
+    if (user.deletedAt !== null) {
+      throw new ForbiddenException('이미 삭제된 사용자입니다.');
     }
 
     const result = await this.usersRepository.update(

@@ -23,6 +23,7 @@ type Review {
   content: String!
   rating: Int!
   product: Product!
+  user: User!
 }
 
 type ProductTag {
@@ -97,6 +98,7 @@ type User {
   deletedAt: DateTime!
   cart: Cart
   orders: [Order!]
+  reviews: [Review!]!
 }
 
 type PaymentTransaction {
@@ -118,15 +120,16 @@ type Query {
   fetchCart: Cart!
   fetchProduct(productId: String!): Product!
   fetchProducts: [Product!]!
-  fetchProductTag(productTagId: String!): ProductTag!
+  fetchProductTagById(productTagId: String!): ProductTag!
   fetchProductTags: [ProductTag!]!
   fetchProductsByTag(productTagId: String!): [Product!]!
   fetchOrder(orderId: String!): Order!
   fetchOrders: [Order!]!
   fetchPaymentTransaction(impUid: String!): PaymentTransaction!
   fetchPaymentTransactions: [PaymentTransaction!]!
-  fetchReview(reviewId: String!): Review!
-  fetchReviews(productId: String!): [Review!]!
+  fetchReviewsByReviewId(reviewId: String!): Review!
+  fetchReviewsByUserId: [Review!]!
+  fetchReviewsByProductId(productId: String!): [Review!]!
 }
 
 type Mutation {
