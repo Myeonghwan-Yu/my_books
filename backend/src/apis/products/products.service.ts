@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   ConflictException,
   Injectable,
   NotFoundException,
@@ -45,8 +46,7 @@ export class ProductsService {
   async create({
     createProductInput,
   }: IProductsServiceCreate): Promise<Product> {
-    const { bookProductInput, isBook, productImages, ...productData } =
-      createProductInput;
+    const { bookProductInput, isBook, ...productData } = createProductInput;
 
     let bookProduct = null;
 
@@ -62,17 +62,9 @@ export class ProductsService {
       bookProduct = await this.bookProductsService.create({ bookProductInput });
     }
 
-    let uploadedImages = [];
-    if (productImages && productImages.length > 0) {
-      uploadedImages = await this.productImagesService.upload({
-        productImages,
-      });
-    }
-
     const product = this.productsRepository.create({
       ...productData,
       bookProduct,
-      productImages: uploadedImages,
     });
 
     return this.productsRepository.save(product);
@@ -84,11 +76,16 @@ export class ProductsService {
   }: IProductsServiceUpdate): Promise<Product> {
     const product = await this.findOne({ productId });
 
-    const result = await this.productsRepository.save({
+    if (!product) {
+      throw new NotFoundException('해당 상품을 찾을 수 없습니다.');
+    }
+
+    const updatedProduct = {
       ...product,
       ...updateProductInput,
-      productImages: product.productImages,
-    });
+    };
+
+    const result = await this.productsRepository.save(updatedProduct);
 
     return result;
   }
@@ -100,17 +97,21 @@ export class ProductsService {
       throw new NotFoundException('해당 상품을 찾을 수 없습니다.');
     }
 
+    if (product.productImages && product.productImages.length > 0) {
+      throw new BadRequestException('이미지를 먼저 삭제해주세요.');
+    }
+
     if (product.bookProduct) {
       const result = await this.bookProductsService.delete({
         bookProductId: product.bookProduct.id,
       });
-
       if (!result) {
-        throw new NotFoundException('책 상품 정보를 찾을 수 없습니다.');
+        throw new NotFoundException('책 정보를 삭제하는 데 실패했습니다.');
       }
     }
 
     const result = await this.productsRepository.delete({ id: productId });
+
     return result.affected > 0;
   }
 
@@ -128,7 +129,7 @@ export class ProductsService {
     }
 
     if (product.productTags.some((tag) => tag.id === productTagId)) {
-      throw new ConflictException('이미 추가된 태그입니다');
+      throw new ConflictException('이미 상품에 추가된 태그입니다');
     }
 
     product.productTags.push(productTag);
