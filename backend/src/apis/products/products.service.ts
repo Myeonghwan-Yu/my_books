@@ -13,12 +13,12 @@ import {
   IProductsServiceCheckSoldOut,
   IProductsServiceCreate,
   IProductsServiceDelete,
+  IProductsServiceFindAll,
   IProductsServiceFindOne,
   IProductsServiceUpdate,
 } from './interfaces/products-service.interface';
 import { BookProductsService } from '../bookProducts/bookProducts.service';
 import { ProductTagsService } from '../productTags/productTags.service';
-import { ProductImagesService } from '../productImages/productImages.service';
 
 @Injectable({ scope: Scope.DEFAULT })
 export class ProductsService {
@@ -26,13 +26,19 @@ export class ProductsService {
     @InjectRepository(Product)
     private readonly productsRepository: Repository<Product>,
     private readonly bookProductsService: BookProductsService,
-    private readonly productImagesService: ProductImagesService,
     private readonly productTagsService: ProductTagsService,
   ) {}
 
-  async findAll(): Promise<Product[]> {
+  async findAll({
+    page = 1,
+    limit = 10,
+  }: IProductsServiceFindAll): Promise<Product[]> {
+    const skip = (page - 1) * limit;
+
     return this.productsRepository.find({
       relations: ['bookProduct', 'productImages'],
+      skip,
+      take: limit,
     });
   }
 

@@ -9,6 +9,11 @@ export interface IProductsServiceFindOne {
   productId: string;
 }
 
+export interface IProductsServiceFindAll {
+  page: number;
+  limit: number;
+}
+
 export interface IProductsServiceUpdate {
   productId: string;
   updateProductInput: UpdateProductInput;
