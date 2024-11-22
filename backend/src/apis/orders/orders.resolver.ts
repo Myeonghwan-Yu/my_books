@@ -40,6 +40,14 @@ export class OrdersResolver {
   }
 
   @UseGuards(GqlAuthGuard('access'))
+  @Mutation(() => Order)
+  async createOrderFromCart(@Context() context: IContext) {
+    const userId = context.req.user.id;
+
+    return this.ordersService.createOrderFromCart({ userId });
+  }
+
+  @UseGuards(GqlAuthGuard('access'))
   @Mutation(() => Boolean)
   async deleteOrder(
     @Args('orderId') orderId: string,

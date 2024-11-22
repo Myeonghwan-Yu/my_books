@@ -13,6 +13,10 @@ export class IOrdersServiceCreate {
   createOrderInput: CreateOrderInput;
 }
 
+export class IOrdersServiceCreateOrderFromCart {
+  userId: string;
+}
+
 export class IOrdersServiceDelete {
   userId: string;
   orderId: string;

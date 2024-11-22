@@ -8,12 +8,15 @@ import { Order } from './entities/order.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import {
   IOrdersServiceCreate,
+  IOrdersServiceCreateOrderFromCart,
   IOrdersServiceDelete,
   IOrdersServiceFindAll,
   IOrdersServiceFindOne,
 } from './interfaces/orders-service.interface';
 import { OrderItemService } from '../orderItems/orderItems.service';
 import { ProductsService } from '../products/products.service';
+import { CartsService } from '../carts/carts.service';
+import { UsersService } from '../users/users.service';
 
 @Injectable()
 export class OrdersService {
@@ -22,6 +25,8 @@ export class OrdersService {
     private readonly ordersRepository: Repository<Order>, //
     private readonly orderItemsService: OrderItemService,
     private readonly productsService: ProductsService,
+    private readonly cartsService: CartsService,
+    private readonly usersService: UsersService,
   ) {}
 
   async findOne({ orderId }: IOrdersServiceFindOne): Promise<Order> {
@@ -78,11 +83,45 @@ export class OrdersService {
     return await this.ordersRepository.save(order);
   }
 
-  async delete({ orderId, userId }: IOrdersServiceDelete): Promise<boolean> {
-    const order = await this.ordersRepository.findOne({
-      where: { id: orderId },
-      relations: ['user'],
+  async createOrderFromCart({
+    userId,
+  }: IOrdersServiceCreateOrderFromCart): Promise<Order> {
+    const cart = await this.cartsService.findOne({ userId });
+
+    const order = await this.ordersRepository.save({
+      user: { id: userId },
+      orderItems: [],
     });
+
+    const orderItems = [];
+
+    for (const cartItem of cart.cartItems) {
+      const product = await this.productsService.checkSoldOut({
+        productId: cartItem.product.id,
+        quantity: cartItem.quantity,
+      });
+
+      const itemTotalPrice = product.price * cartItem.quantity;
+
+      const orderItem = await this.orderItemsService.create({
+        orderId: order.id,
+        productId: cartItem.product.id,
+        quantity: cartItem.quantity,
+        itemTotalPrice,
+      });
+
+      orderItems.push(orderItem);
+    }
+
+    order.orderItems = orderItems;
+
+    await this.cartsService.deleteCart({ userId });
+
+    return await this.ordersRepository.save(order);
+  }
+
+  async delete({ orderId, userId }: IOrdersServiceDelete): Promise<boolean> {
+    const order = await this.findOne({ orderId });
 
     if (!order) {
       throw new NotFoundException('해당 주문을 찾을 수 없습니다.');

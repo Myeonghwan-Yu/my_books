@@ -119,7 +119,7 @@ type Query {
   fetchUser: User!
   fetchCart: Cart!
   fetchProduct(productId: String!): Product!
-  fetchProducts: [Product!]!
+  fetchProducts(page: Int = 1, limit: Int = 10): [Product!]!
   fetchProductTagById(productTagId: String!): ProductTag!
   fetchProductTags: [ProductTag!]!
   fetchProductsByTag(productTagId: String!): [Product!]!
@@ -190,12 +190,8 @@ input CreateProductInput {
   description: String!
   price: Int!
   isBook: Boolean!
-  productImages: [Upload!]
   bookProductInput: BookProductInput
 }
-
-"""The `Upload` scalar type represents a file upload."""
-scalar Upload
 
 input BookProductInput {
   author: String!
@@ -211,7 +207,6 @@ input UpdateProductInput {
   description: String
   price: Int
   isBook: Boolean
-  productImages: [Upload!]
   bookProductInput: BookProductInput
   stock: Int
 }

@@ -7,6 +7,7 @@ import { UsersModule } from '../users/users.module';
 import { OrderItemService } from '../orderItems/orderItems.service';
 import { ProductsModule } from '../products/products.module';
 import { OrderItem } from '../orderItems/entities/orderItem.entity';
+import { CartsModule } from '../carts/carts.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { OrderItem } from '../orderItems/entities/orderItem.entity';
     ]),
     UsersModule,
     ProductsModule,
+    CartsModule,
   ],
 
   providers: [
