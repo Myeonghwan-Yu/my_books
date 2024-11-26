@@ -1,6 +1,7 @@
 import {
   BadRequestException,
   ConflictException,
+  Inject,
   Injectable,
   NotFoundException,
   Scope,
@@ -19,6 +20,8 @@ import {
 } from './interfaces/products-service.interface';
 import { BookProductsService } from '../bookProducts/bookProducts.service';
 import { ProductTagsService } from '../productTags/productTags.service';
+import { Cache } from 'cache-manager';
+import { CACHE_MANAGER } from '@nestjs/cache-manager';
 
 @Injectable({ scope: Scope.DEFAULT })
 export class ProductsService {
@@ -27,6 +30,8 @@ export class ProductsService {
     private readonly productsRepository: Repository<Product>,
     private readonly bookProductsService: BookProductsService,
     private readonly productTagsService: ProductTagsService,
+    @Inject(CACHE_MANAGER)
+    private readonly cacheManager: Cache,
   ) {}
 
   async findAll({
@@ -43,6 +48,20 @@ export class ProductsService {
   }
 
   async findOne({ productId }: IProductsServiceFindOne): Promise<Product> {
+    let viewCount = await this.cacheManager.get<number>(
+      `viewCount:${productId}`,
+    );
+
+    if (!viewCount) {
+      viewCount = 0;
+    }
+
+    viewCount++;
+
+    await this.cacheManager.set(`viewCount:${productId}`, viewCount, {
+      ttl: 864000,
+    });
+
     return this.productsRepository.findOne({
       where: { id: productId },
       relations: ['bookProduct', 'productImages'],

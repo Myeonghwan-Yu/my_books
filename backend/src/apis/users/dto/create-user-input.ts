@@ -17,6 +17,6 @@ export class CreateUserInput {
 
   @Field(() => Int)
   @Min(0)
-  @Max(13)
+  @Max(200)
   age: number;
 }

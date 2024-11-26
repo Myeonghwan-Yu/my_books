@@ -16,7 +16,6 @@ import {
 import { OrderItemService } from '../orderItems/orderItems.service';
 import { ProductsService } from '../products/products.service';
 import { CartsService } from '../carts/carts.service';
-import { UsersService } from '../users/users.service';
 
 @Injectable()
 export class OrdersService {
@@ -26,7 +25,6 @@ export class OrdersService {
     private readonly orderItemsService: OrderItemService,
     private readonly productsService: ProductsService,
     private readonly cartsService: CartsService,
-    private readonly usersService: UsersService,
   ) {}
 
   async findOne({ orderId }: IOrdersServiceFindOne): Promise<Order> {

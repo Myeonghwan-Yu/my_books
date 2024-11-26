@@ -44,11 +44,12 @@ export class UsersService {
     const { email, password, name, age } = createUserInput;
 
     const existingUser = await this.findOneByEmail({ email });
-    if (existingUser) {
+
+    if (existingUser && existingUser.deletedAt === null) {
       throw new ConflictException('이미 등록된 이메일입니다.');
     }
 
-    if (existingUser.deletedAt !== null) {
+    if (existingUser && existingUser.deletedAt !== null) {
       throw new ForbiddenException('이미 삭제된 이용자입니다.');
     }
 

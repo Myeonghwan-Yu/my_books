@@ -152,6 +152,7 @@ type Mutation {
   updateProductTag(productTagId: String!, updateProductTagInput: UpdateProductTagInput!): ProductTag!
   deleteProductTag(productTagId: String!): Boolean!
   createOrder(createOrderInput: CreateOrderInput!): Order!
+  createOrderFromCart: Order!
   deleteOrder(orderId: String!): Boolean!
   createPaymentTransaction(impUid: String!, amount: Int!): PaymentTransaction!
   cancelPaymentTransaction(impUid: String!): PaymentTransaction!

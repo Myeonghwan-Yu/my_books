@@ -11,6 +11,9 @@ import { AuthModule } from './apis/auth/auth.module';
 import { CartsModule } from './apis/carts/carts.module';
 import { OrdersModule } from './apis/orders/orders.module';
 import { PaymentTransactionsModule } from './apis/paymentTransaction/paymentTransactions.module';
+import { RedisClientOptions } from 'redis';
+import * as redisStore from 'cache-manager-redis-store';
+import { CacheModule } from '@nestjs/cache-manager';
 
 @Module({
   imports: [
@@ -41,6 +44,11 @@ import { PaymentTransactionsModule } from './apis/paymentTransaction/paymentTran
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
       synchronize: true,
       logging: true,
+    }),
+    CacheModule.register<RedisClientOptions>({
+      store: redisStore,
+      url: 'redis://my-redis:6379',
+      isGlobal: true,
     }),
   ],
 })
