@@ -1,5 +1,7 @@
 # my_books
 
+사용한 기능들:
+
 프리티어 setting.json으로 사용
 
 app.module에서 gql, typeorm, config 모듈 사용
