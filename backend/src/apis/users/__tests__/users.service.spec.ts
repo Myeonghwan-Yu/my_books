@@ -1,6 +1,10 @@
 import { Test } from '@nestjs/testing';
 import { UsersService } from '../users.service';
-import { ConflictException, NotFoundException } from '@nestjs/common';
+import {
+  ConflictException,
+  ForbiddenException,
+  NotFoundException,
+} from '@nestjs/common';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { User } from '../entities/user.entity';
 
@@ -25,9 +29,7 @@ class MockUsersRepository {
   ];
 
   findOne({ where }) {
-    const user = this.mydb.find(
-      (user) => user.email === where.email && user.id === where.id,
-    );
+    const user = this.mydb.find((user) => user.id === where.id);
     return user || null;
   }
 
@@ -35,7 +37,6 @@ class MockUsersRepository {
     const existingUser = this.mydb.find(
       (user) => user.email === createUserInput.email,
     );
-
     if (existingUser) {
       throw new ConflictException('이미 등록된 이메일입니다.');
     }
@@ -57,15 +58,30 @@ class MockUsersRepository {
     const user = this.findOne({ where: { id: deleteUserInput.id } });
 
     if (!user) {
-      return null;
+      throw new NotFoundException('사용자를 찾을 수 없습니다.');
     }
 
     if (user.deletedAt !== null) {
-      return false;
+      throw new ForbiddenException('이미 삭제된 사용자입니다.');
     }
 
     user.deletedAt = new Date();
     return true;
+  }
+
+  async update(updateUserInput) {
+    const user = this.mydb.find((user) => user.id === updateUserInput.id);
+
+    if (!user) {
+      throw new NotFoundException('사용자를 찾을 수 없습니다.');
+    }
+
+    if (user.deletedAt !== null) {
+      throw new ForbiddenException('이미 삭제된 사용자입니다.');
+    }
+
+    Object.assign(user, updateUserInput);
+    return { affected: 1 };
   }
 }
 
@@ -155,7 +171,47 @@ describe('UsersService', () => {
         try {
           await usersService.delete(deleteUserInput);
         } catch (error) {
+          expect(error).toBeInstanceOf(ForbiddenException);
+        }
+      });
+
+      it('삭제가 잘 되었는지 검증하기', async () => {
+        const deleteUserInput = { userId: '1' };
+
+        const result = await usersService.delete(deleteUserInput);
+
+        expect(result).toBe(true);
+      });
+    });
+
+    describe('update', () => {
+      it('사용자가 존재하는지 검증하기', async () => {
+        const updateUserInput = {
+          userId: '999',
+          updateUserInput: {
+            name: '김응수',
+          },
+        };
+
+        try {
+          await usersService.update(updateUserInput);
+        } catch (error) {
           expect(error).toBeInstanceOf(NotFoundException);
+        }
+      });
+
+      it('이미 삭제된 계정인지 검증하기', async () => {
+        const updateUserInput = {
+          userId: '2',
+          updateUserInput: {
+            name: '김영수',
+          },
+        };
+
+        try {
+          await usersService.update(updateUserInput);
+        } catch (error) {
+          expect(error).toBeInstanceOf(ForbiddenException);
         }
       });
     });
