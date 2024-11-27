@@ -70,6 +70,15 @@ export class AuthService {
       'set-Cookie', //
       `refreshToken=${refreshToken}; path=/;`,
     );
+
+    // 배포환경에서는
+    // context.res.setHeader(
+    //   'set-Cookie',
+    //   `refreshToken=${refreshToken}; path=/; domain=.beodeulsori.shop; HttpOnly; Secure; SameSite=None;`,
+    // );
+    // context.res.setHeader(
+    // 'Access-Control-Allow-Origin', 'https://beodeulsori.shop');
+    // )
   }
 
   getAccessToken({ user }: IAuthServiceGetAccessToken): string {

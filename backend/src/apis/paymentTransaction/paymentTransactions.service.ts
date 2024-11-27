@@ -182,7 +182,6 @@ export class PaymentTransactionsService {
         );
       }
 
-      // 포인트 부족하면 에러처리하는데, 고민해봐야함.
       if (
         paidPaymentTransactions[0].user.point <
         Math.floor(paidPaymentTransactions[0].amount * 0.02)
