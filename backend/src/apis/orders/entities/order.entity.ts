@@ -8,7 +8,6 @@ import {
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
-  UpdateDateColumn,
 } from 'typeorm';
 
 export enum PaymentStatus {
@@ -31,10 +30,6 @@ export class Order {
   @CreateDateColumn()
   @Field(() => Date)
   createdAt: Date;
-
-  @UpdateDateColumn()
-  @Field(() => Date)
-  updatedAt: Date;
 
   @Column({ nullable: true })
   @Field(() => Date)
