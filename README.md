@@ -1,5 +1,7 @@
 # my_books
 
+ERD 테이블 : https://www.erdcloud.com/d/XvMPeZNoEN6sXsok6
+
 사용한 기능들:
 
 프리티어 setting.json으로 사용
@@ -38,4 +40,4 @@ softDelete 언제 적용할지 고민해봤음.. 유저, 결제API에서만 하�
 
 // 해결이 어려웠던 내용들
 
-오더에서 결제를 어떻게 유기적으로 연결해야하는지 모르겠음.
+오더에서 결제를 어떻게 유기적으로 연결해야하는지 조금 더 학습 필요
