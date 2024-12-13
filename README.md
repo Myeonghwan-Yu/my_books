@@ -1,5 +1,7 @@
 # my_books
 
+개인 프로젝트 소개 : Nest.js와 GraphQL를 활용하여 쇼핑몰 백엔드 시스템을 구현했습니다. 상품 CRUD, JWT 토큰을 이용한 사용자 인증과 권한 관리, 장바구니, 주문 및 결제 처리까지 모든 기능을 포함하며, TypeORM을 사용하여 효율적인 데이터 관리와 API 설계를 적용했습니다. Google, Kakao, Naver 등의 OAuth2 소셜 로그인 기능도 구현하여 확장성과 편의성을 강화했습니다.
+
 ERD 테이블 : https://www.erdcloud.com/d/XvMPeZNoEN6sXsok6
 
 사용한 기능들:
