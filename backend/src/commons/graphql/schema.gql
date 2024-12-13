@@ -10,6 +10,7 @@ type BookProduct {
   isbn: String!
   pages: Int!
   genre: String!
+  product: Product!
 }
 
 """
@@ -42,7 +43,6 @@ type Order {
   id: String!
   orderTotalPrice: Float!
   createdAt: DateTime!
-  updatedAt: DateTime!
   deletedAt: DateTime!
   paymentStatus: String!
   user: User!

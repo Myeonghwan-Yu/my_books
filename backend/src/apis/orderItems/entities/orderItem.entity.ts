@@ -14,7 +14,7 @@ export class OrderItem {
   @Field(() => Order)
   order: Order;
 
-  @OneToOne(() => Product, (product) => product.orderItems)
+  @ManyToOne(() => Product, (product) => product.orderItems)
   @Field(() => Product)
   product: Product;
 
