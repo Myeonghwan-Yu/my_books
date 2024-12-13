@@ -12,8 +12,6 @@ app.module에서 gql, typeorm, config 모듈 사용
 
 main.ts에서 파이프, 익셉션필터, 파일업로드 사용
 
-jest 절대경로 인식하게 수정
-
 설치한 패키지들: graphql, apollo-server @nestjs/config nestjs/typeorm typeorm mysql2 class-validator class-transformers @nestjs/microservices
 passport passport-jwt passport-google-oauth20 passport-naver-v2 passport-kakao
 @google-cloud/storage graphql-upload @types/graphql-upload
