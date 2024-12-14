@@ -6,15 +6,12 @@ import { Product } from './entities/product.entity';
 import { BookProductsService } from '../bookProducts/bookProducts.service';
 import { ProductTagsModule } from '../productTags/productTags.module';
 import { BookProduct } from '../bookProducts/entities/bookproduct.entity';
-import { ProductImagesService } from '../productImages/productImages.service';
-import { ProductImage } from '../productImages/entities/productImage.entity';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([
       Product, //
       BookProduct,
-      ProductImage,
     ]),
     ProductTagsModule,
   ],
@@ -23,7 +20,6 @@ import { ProductImage } from '../productImages/entities/productImage.entity';
     ProductsResolver, //
     ProductsService,
     BookProductsService,
-    ProductImagesService,
   ],
 
   exports: [ProductsService],
